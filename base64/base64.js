@@ -2,7 +2,8 @@
  * Base64 encode / decode
  * http://www.webtoolkit.info/
  * Wrapped to AMD by Viacheslav Lotsmanov <lotsmanov at gmail dot com>
- * @version r3
+ * Fixed global scope in _utf8_decode by Viacheslav Lotsmanov <lotsmanov at gmail dot com>
+ * @version r4
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
  */
 
