@@ -2,13 +2,12 @@
  * Base64 encode / decode
  * http://www.webtoolkit.info/
  * Wrapped to AMD by Viacheslav Lotsmanov <lotsmanov at gmail dot com>
- * @version r2
+ * @version r3
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
  */
 
 define('base64', function () {
-var Base64;
-return Base64 = {
+var Base64 = {
  
 	// private property
 	_keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -118,8 +117,9 @@ return Base64 = {
 	_utf8_decode: function (utftext) { // {{{1
 
 		var string = "";
-		var i = 0;
-		var c = c1 = c2 = 0;
+		var i, c, c1, c2;
+
+		i = c = c1 = c2 = 0;
  
 		while ( i < utftext.length ) {
  
@@ -145,7 +145,8 @@ return Base64 = {
 
 	} // _utf8_decode }}}1
  
-}; // return Base64
+}; // Base64
+return Base64;
 }); // define()
 
 // vim: set noet ts=4 sts=4 sw=4 fenc=utf-8 foldmethod=marker :
