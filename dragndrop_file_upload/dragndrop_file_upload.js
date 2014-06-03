@@ -6,7 +6,7 @@
  * @requires jquery
  * @requires HTML5 FileAPI
  * @requires XMLHttpRequest
- * @version r1
+ * @version r2
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -94,7 +94,7 @@ define(['jquery'], function ($) {
 		 * @callback DragNDropFileUpload~uploaderInitCallback
 		 * @this {Uploader}
 		 */
-		uploaderInitCallback: null,
+		uploaderInitCallback: null
 
 	}; // defaultParams }}}1
 
@@ -700,7 +700,7 @@ define(['jquery'], function ($) {
 
 		url: null,
 		fileFieldName: 'file',
-		postData: null,
+		postData: null
 
 	}; // uploaderDefaultParams }}}2
 
@@ -1114,7 +1114,7 @@ define(['jquery'], function ($) {
 		self.started = undefined;
 		self._toPost = undefined;
 
-	}; // Uploader.prototype.destroy }}}2
+	}; // Uploader.prototype.destroy() }}}2
 
 	/**
 	 * Extend post data from params
@@ -1134,7 +1134,7 @@ define(['jquery'], function ($) {
 
 		self._toPost = $.extend({}, self._toPost, postData);
 
-	}; // Uploader.prototype.extendPostData }}}2
+	}; // Uploader.prototype.extendPostData() }}}2
 
 	/**
 	 * Abort uploading
@@ -1160,7 +1160,7 @@ define(['jquery'], function ($) {
 		self.successful = false;
 		self.finished = true;
 
-	}; // Uploader.prototype.abort }}}2
+	}; // Uploader.prototype.abort() }}}2
 
 	/**
 	 * Start uploading by FileReader
@@ -1181,7 +1181,7 @@ define(['jquery'], function ($) {
 			self._reader.readAsBinaryString(self.params.file);
 		}, 1);
 
-	}; // Uploader.prototype.makeError() }}}2
+	}; // Uploader.prototype.startUploading() }}}2
 
 	// Uploader exceptions {{{2
 
