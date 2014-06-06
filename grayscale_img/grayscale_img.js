@@ -1,7 +1,10 @@
 /*!
  * Get grayscale image
  *
- * @version r2
+ * @module grayscale_img
+ * @requires load_img
+ *
+ * @version r3
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -100,9 +103,9 @@ define(['jquery', 'load_img'], function ($, loadImg) {
 
 			}, 1);
 
-		});
+		}); // loadImg()
 
-	}
+	} // grayscaleImg()
 
 	/* exceptions {{{1 */
 
@@ -173,6 +176,4 @@ define(['jquery', 'load_img'], function ($, loadImg) {
 
 	return grayscaleImg;
 
-});
-
-// vim: set noet ts=4 sts=4 sw=4 fenc=utf-8 foldmethod=marker :
+}); // define()
