@@ -1,7 +1,10 @@
 /*!
  * Dynamic loading images
  *
- * @version r2
+ * @module load_img
+ * @requires get_val ('loadImgTimeout')
+ * 
+ * @version r3
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -41,7 +44,7 @@ define(['get_val', 'jquery'], function (getVal, $) {
 			$img.off('load');
 			$img = undefined;
 
-		}
+		} // destroy()
 
 		/** @private */
 		function timeout() {
@@ -51,7 +54,7 @@ define(['get_val', 'jquery'], function (getVal, $) {
 			destroy();
 			callback(new loadImg.exceptions.Timeout());
 
-		}
+		} // timeout()
 
 		/** @private */
 		function killTimer() {
@@ -63,7 +66,7 @@ define(['get_val', 'jquery'], function (getVal, $) {
 
 			}
 
-		}
+		} // killTimer()
 
 		/** @private */
 		function loadHandler() {
@@ -86,13 +89,13 @@ define(['get_val', 'jquery'], function (getVal, $) {
 
 			}, 1);
 
-		}
+		} // loadHandler()
 
 		$img.on('load', loadHandler).attr('src', link);
 
 		timerId = setTimeout(timeout, getVal('loadImgTimeout'));
 
-	} // loadImg
+	} // loadImg()
 
 	/* exceptions {{{ */
 
@@ -138,5 +141,3 @@ define(['get_val', 'jquery'], function (getVal, $) {
 	return loadImg;
 
 }); // define()
-
-// vim: set noet ts=4 sts=4 sw=4 fenc=utf-8 foldmethod=marker :
