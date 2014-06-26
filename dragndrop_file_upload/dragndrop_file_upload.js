@@ -6,7 +6,8 @@
  * @requires jquery
  * @requires HTML5 FileAPI
  * @requires XMLHttpRequest
- * @version r2
+ *
+ * @version r3
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -1035,11 +1036,9 @@ define(['jquery'], function ($) {
 
 			// the file
 			body += '--' + boundary + '\r\n';
-			body += 'Content-Disposition: form-data; name="'+
-				self.params.fileFieldName +
-				'"; filename="'+
-				self.params.file.name +
-				'"\r\n';
+			body += 'Content-Disposition: form-data; charset: utf-8; accept-charset: utf-8'+
+				'; name="'+ self.params.fileFieldName +'"'+
+				'; filename="'+ unescape(encodeURIComponent( self.params.file.name )) +'"\r\n';
 			body += 'Content-Type: application/octet-stream\r\n\r\n';
 			body += self._reader.result + '\r\n';
 
