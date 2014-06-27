@@ -9,16 +9,19 @@ var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 
 gulp.task('clean-development', function () {
-	gulp.src(pkg.buildFile)
-		.pipe(clean({ force: true }));
+	gulp.src(pkg.buildFile).pipe(clean({ force: true }));
 });
 
 gulp.task('clean-production', function () {
-	gulp.src(pkg.buildFileMin)
-		.pipe(clean({ force: true }));
+	gulp.src(pkg.buildFileMin).pipe(clean({ force: true }));
 });
 
 gulp.task('clean', ['clean-development', 'clean-production']);
+
+gulp.task('distclean', function () {
+	gulp.src('./gulp').pipe(clean({ force: true }));
+	gulp.src('./node_modules').pipe(clean({ force: true }));
+});
 
 var preprocessContext = {
 	REVISION: pkg.revision,
