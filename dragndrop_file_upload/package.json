@@ -17,7 +17,7 @@
 
 	"buildFile": "./dragndrop_file_upload.js",
 	"buildFileMin": "./dragndrop_file_upload.min.js",
-	"revision": "r5",
+	"revision": "r6",
 	"mainModule": "./src/main.js",
 	"debug": false,
 	"author": "Viacheslav Lotsmanov <lotsmanov89@gmail.com>",

@@ -10,4 +10,8 @@
 // @include methods/startUploading.js
 // @include exceptions.js
 
+// @ifdef DEBUG
+// @include unit_tests.js
+// @endif
+
 // Uploader class }}}1

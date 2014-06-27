@@ -25,10 +25,11 @@ gulp.task('distclean', function () {
 
 var preprocessContext = {
 	REVISION: pkg.revision,
-	DEBUG: pkg.debug,
 	AUTHOR: pkg.author,
 	LICENSE: pkg.license,
 };
+
+if (pkg.debug) preprocessContext.DEBUG = true;
 
 gulp.task('build-development', ['clean-development'], function () {
 	gulp.src(pkg.mainModule)

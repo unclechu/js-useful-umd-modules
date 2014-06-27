@@ -7,4 +7,8 @@
 // @include methods/abort.js
 // @include exceptions.js
 
+// @ifdef DEBUG
+// @include unit_tests.js
+// @endif
+
 // DragNDropFileUpload }}}1
