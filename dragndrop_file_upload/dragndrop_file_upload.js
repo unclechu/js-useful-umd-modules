@@ -49,7 +49,9 @@ define(['jquery'], function ($) {
 		if (!window.XMLHttpRequest) return new Uploader.exceptions.XMLHttpRequestIsNotSupported();
 
 		if (!(new XMLHttpRequest()).sendAsBinary) {
-			if (!window.ArrayBuffer) return new Uploader.exceptions.ArrayBufferIsNotSupported();
+			if (!(Array.prototype.map instanceof Function))
+				return new Uploader.exceptions.ArrayPrototypeMapIsNotSupported();
+
 			if (!window.Uint8Array) return new Uploader.exceptions.Uint8ArrayIsNotSupported();
 		}
 
@@ -150,7 +152,7 @@ define(['jquery'], function ($) {
 	 *
 	 * @exception {Error} Uploader~FileReaderIsNotSupported
 	 * @exception {Error} Uploader~XMLHttpRequestIsNotSupported
-	 * @exception {Error} Uploader~ArrayBufferIsNotSupported
+	 * @exception {Error} Uploader~ArrayPrototypeMapIsNotSupported
 	 * @exception {Error} Uploader~Uint8ArrayIsNotSupported
 	 */
 	function DragNDropFileUpload(params, callback) { // {{{1
@@ -658,6 +660,16 @@ define(['jquery'], function ($) {
 	// helpers {{{2
 
 	/**
+	 * Helper for "sendAsBinary" helper
+	 *
+	 * @private
+	 * @inner
+	 */
+	function byteValue(x) { return x.charCodeAt(0) & 0xff; }
+
+	/**
+	 * Alternative "sendAsBinary" method if not supported native (as in Firefox)
+	 *
 	 * @private
 	 * @inner
 	 * @this {XMLHttpRequest}
@@ -668,12 +680,9 @@ define(['jquery'], function ($) {
 			this.sendAsBinary(body);
 		} else {
 			// chrome (W3C spec.)
-			var data = new window.ArrayBuffer(body.length);
-			var ui8a = new window.Uint8Array(data, 0);
-			for (var i=0; i<body.length; i++) {
-				ui8a[i] = (body.charCodeAt(i) & 0xff);
-			}
-			this.send(data);
+			var ords = Array.prototype.map.call(body, byteValue);
+			var ui8a = new window.Uint8Array(ords);
+			this.send(ui8a);
 		}
 	} // sendAsBinary() }}}3
 
@@ -737,7 +746,7 @@ define(['jquery'], function ($) {
 	 *
 	 * @exception {Error} Uploader~FileReaderIsNotSupported
 	 * @exception {Error} Uploader~XMLHttpRequestIsNotSupported
-	 * @exception {Error} Uploader~ArrayBufferIsNotSupported
+	 * @exception {Error} Uploader~ArrayPrototypeMapIsNotSupported
 	 * @exception {Error} Uploader~Uint8ArrayIsNotSupported
 	 */
 	function Uploader(superclass, params, callback) { // {{{2
@@ -1213,7 +1222,7 @@ define(['jquery'], function ($) {
 	 * @prop {Error} UnsupportedFeature
 	 * @prop {Error} FileReaderIsNotSupported
 	 * @prop {Error} XMLHttpRequestIsNotSupported
-	 * @prop {Error} ArrayBufferIsNotSupported
+	 * @prop {Error} ArrayPrototypeMapIsNotSupported
 	 * @prop {Error} Uint8ArrayIsNotSupported
 	 * @static
 	 * @readOnly
@@ -1415,25 +1424,25 @@ define(['jquery'], function ($) {
 	Uploader.exceptions.XMLHttpRequestIsNotSupported = function (message) {
 		Error.call(this);
 		this.name = 'XMLHttpRequestIsNotSupported';
-		this.message = message || 'FileReader is not supported.';
+		this.message = message || 'XMLHttpRequest is not supported.';
 	};
 	Uploader.exceptions.XMLHttpRequestIsNotSupported.prototype =
 	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
 
-	/** @typedef {Error} Uploader~ArrayBufferIsNotSupported */
-	Uploader.exceptions.ArrayBufferIsNotSupported = function (message) {
+	/** @typedef {Error} Uploader~ArrayPrototypeMapIsNotSupported */
+	Uploader.exceptions.ArrayPrototypeMapIsNotSupported = function (message) {
 		Error.call(this);
-		this.name = 'ArrayBufferIsNotSupported';
-		this.message = message || 'FileReader is not supported.';
+		this.name = 'ArrayPrototypeMapIsNotSupported';
+		this.message = message || 'Array.prototype.map is not supported.';
 	};
-	Uploader.exceptions.ArrayBufferIsNotSupported.prototype =
+	Uploader.exceptions.ArrayPrototypeMapIsNotSupported.prototype =
 	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
 
 	/** @typedef {Error} Uploader~Uint8ArrayIsNotSupported */
 	Uploader.exceptions.Uint8ArrayIsNotSupported = function (message) {
 		Error.call(this);
 		this.name = 'Uint8ArrayIsNotSupported';
-		this.message = message || 'FileReader is not supported.';
+		this.message = message || 'Uint8Array is not supported.';
 	};
 	Uploader.exceptions.Uint8ArrayIsNotSupported.prototype =
 	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
