@@ -1,0 +1,25 @@
+{
+	"dependencies": {
+		"gulp": "*",
+		"gulp-clean": "*",
+		"gulp-concat": "*",
+		"gulp-preprocess": "*",
+		"gulp-jshint": "*",
+		"gulp-uglify": "*"
+	},
+	"scripts": {
+		"postinstall": "ln -s ./node_modules/.bin/gulp gulp"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/unclechu/js-useful-amd-modules.git"
+	},
+
+	"buildFile": "./dragndrop_file_upload.js",
+	"buildFileMin": "./dragndrop_file_upload.min.js",
+	"revision": "r5",
+	"mainModule": "./src/main.js",
+	"debug": false,
+	"author": "Viacheslav Lotsmanov <lotsmanov89@gmail.com>",
+	"license": "GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)"
+}
