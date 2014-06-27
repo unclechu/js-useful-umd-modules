@@ -25,12 +25,16 @@ define(['jquery'], function ($) {
 	 * @private
 	 * @innter
 	 */
-	function inherit(proto) {
-		if (Object.create) return Object.create(proto);
+	function inherit(proto) { // {{{2
+
+		if (Object.create)
+			return Object.create(proto);
+
 		function F() {}
 		F.prototype = proto;
 		return new F();
-	} // inherit()
+
+	} // inherit() }}}2
 
 	/**
 	 * Check for support features
@@ -39,7 +43,7 @@ define(['jquery'], function ($) {
 	 * @inner
 	 * @return {Uploader~UnsupportedFeature|null} - Exception about non-supported feature or null
 	 */
-	function checkForFeatures() {
+	function checkForFeatures() { // {{{2
 
 		if (!window.FileReader) return new Uploader.exceptions.FileReaderIsNotSupported();
 		if (!window.XMLHttpRequest) return new Uploader.exceptions.XMLHttpRequestIsNotSupported();
@@ -51,7 +55,7 @@ define(['jquery'], function ($) {
 
 		return null;
 
-	} // checkForFeatures()
+	} // checkForFeatures() }}}2
 
 	// helpers }}}1
 
@@ -398,8 +402,7 @@ define(['jquery'], function ($) {
 	 * @param {Error} exception
 	 * @returns {boolean} Returns true or throws exception
 	 */
-	DragNDropFileUpload.prototype.makeError = // {{{1
-	function makeError(exception) {
+	DragNDropFileUpload.prototype.makeError = function (exception) { // {{{1
 
 		var self = this;
 
@@ -417,8 +420,7 @@ define(['jquery'], function ($) {
 	 * @private
 	 * @static
 	 */
-	DragNDropFileUpload.prototype.destroy = // {{{1
-	function destroy() {
+	DragNDropFileUpload.prototype.destroy = function () { // {{{1
 
 		var self = this;
 
@@ -448,8 +450,7 @@ define(['jquery'], function ($) {
 	 * @exception {Error} DragNDropFileUpload~UploaderNotFoundById
 	 * @exception {Error} Uploader~UploadingIsNotStarted
 	 */
-	DragNDropFileUpload.prototype.abort = // {{{1
-	function abort(uploadId) {
+	DragNDropFileUpload.prototype.abort = function (uploadId) { // {{{1
 
 		var self = this;
 		var found = false;
@@ -492,8 +493,7 @@ define(['jquery'], function ($) {
 	DragNDropFileUpload.exceptions = {};
 
 	/** @typedef {Error} DragNDropFileUpload~IncorrectArgument */
-	DragNDropFileUpload.exceptions.IncorrectArgument =
-	function IncorrectArgument(message, argName) {
+	DragNDropFileUpload.exceptions.IncorrectArgument = function (message, argName) {
 		Error.call(this);
 		this.name = 'IncorrectArgument';
 		if (argName) this.argumentName = argName;
@@ -507,16 +507,14 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} DragNDropFileUpload~NoParams */
-	DragNDropFileUpload.exceptions.NoParams =
-	function NoParams(message) {
+	DragNDropFileUpload.exceptions.NoParams = function (message) {
 		Error.call(this);
 		this.name = 'NoParams';
 		this.message = message || 'No params.';
 	};
 
 	/** @typedef {Error} DragNDropFileUpload~IncorrectParamValue */
-	DragNDropFileUpload.exceptions.IncorrectParamValue =
-	function IncorrectParamValue(message, param) {
+	DragNDropFileUpload.exceptions.IncorrectParamValue = function (message, param) {
 		Error.call(this);
 		this.name = 'IncorrectParamValue';
 		if (param) this.paramName = param;
@@ -530,8 +528,7 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} DragNDropFileUpload~RequiredParam */
-	DragNDropFileUpload.exceptions.RequiredParam =
-	function RequiredParam(message, param) {
+	DragNDropFileUpload.exceptions.RequiredParam = function (message, param) {
 		Error.call(this);
 		this.name = 'RequiredParam';
 		if (param) this.paramName = param;
@@ -545,16 +542,14 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} DragNDropFileUpload~DragNDropAreaBlockNotFound */
-	DragNDropFileUpload.exceptions.DragNDropAreaBlockNotFound =
-	function DragNDropAreaBlockNotFound(message) {
+	DragNDropFileUpload.exceptions.DragNDropAreaBlockNotFound = function (message) {
 		Error.call(this);
 		this.name = 'DragNDropAreaBlockNotFound';
 		this.message = message || 'Drag&drop block not found by param value "dragndropArea".';
 	};
 
 	/** @typedef {Error} DragNDropFileUpload~UnknownParameter */
-	DragNDropFileUpload.exceptions.UnknownParameter =
-	function UnknownParameter(message, param) {
+	DragNDropFileUpload.exceptions.UnknownParameter = function (message, param) {
 		Error.call(this);
 		this.name = 'UnknownParameter';
 		if (param) this.paramName = param;
@@ -568,8 +563,7 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} DragNDropFileUpload~IncorrectMIMEType */
-	DragNDropFileUpload.exceptions.IncorrectMIMEType =
-	function IncorrectMIMEType(message, mimeType, filename) {
+	DragNDropFileUpload.exceptions.IncorrectMIMEType = function (message, mimeType, filename) {
 		Error.call(this);
 		this.name = 'IncorrectMIMEType';
 		if (mimeType) this.mimeType = mimeType;
@@ -586,8 +580,7 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} DragNDropFileUpload~IncorrectUploadId */
-	DragNDropFileUpload.exceptions.IncorrectUploadId =
-	function IncorrectUploadId(message, uploadId) {
+	DragNDropFileUpload.exceptions.IncorrectUploadId = function (message, uploadId) {
 		Error.call(this);
 		this.name = 'IncorrectUploadId';
 		if (uploadId) this.uploadId = uploadId;
@@ -601,8 +594,7 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} DragNDropFileUpload~UploaderNotFoundById */
-	DragNDropFileUpload.exceptions.UploaderNotFoundById =
-	function UploaderNotFoundById(message, uploadId) {
+	DragNDropFileUpload.exceptions.UploaderNotFoundById = function (message, uploadId) {
 		Error.call(this);
 		this.name = 'UploaderNotFoundById';
 		if (uploadId) this.uploadId = uploadId;
@@ -646,7 +638,7 @@ define(['jquery'], function ($) {
 		}
 	};
 
-	DragNDropFileUpload.unitTesting = function unitTesting() {
+	DragNDropFileUpload.unitTesting = function () {
 		window.console.group('Unit testing of "DragNDropFileUpload"...');
 		for (var key in DragNDropFileUpload.unitTests) {
 			var res = DragNDropFileUpload.unitTests[key]();
@@ -1005,7 +997,7 @@ define(['jquery'], function ($) {
 				}
 			}); // 'error' event }}}4
 
-			self._xhr.onreadystatechange = function onreadystatechange() { // {{{4
+			self._xhr.onreadystatechange = function () { // {{{4
 				if (this.readyState === 4) {
 					if (self.aborted) return;
 
@@ -1092,8 +1084,7 @@ define(['jquery'], function ($) {
 	 * @param {Error} exception
 	 * @returns {boolean} Returns true or throws exception
 	 */
-	Uploader.prototype.makeError = // {{{2
-	function makeError(exception) {
+	Uploader.prototype.makeError = function (exception) { // {{{2
 
 		var self = this;
 
@@ -1111,8 +1102,7 @@ define(['jquery'], function ($) {
 	 * @private
 	 * @static
 	 */
-	Uploader.prototype.destroy = // {{{2
-	function destroy() {
+	Uploader.prototype.destroy = function () { // {{{2
 
 		var self = this;
 
@@ -1141,8 +1131,7 @@ define(['jquery'], function ($) {
 	 * @static
 	 * @exception {Error} Uploader~UploadingIsStarted
 	 */
-	Uploader.prototype.extendPostData = // {{{2
-	function extendPostData(postData) {
+	Uploader.prototype.extendPostData = function (postData) { // {{{2
 
 		var self = this;
 
@@ -1162,8 +1151,7 @@ define(['jquery'], function ($) {
 	 * @exception {Error} Uploader~UploadingIsAlreadyAborted
 	 * @exception {Error} Uploader~UploadingIsFinished
 	 */
-	Uploader.prototype.abort = // {{{2
-	function abort() {
+	Uploader.prototype.abort = function () { // {{{2
 
 		var self = this;
 
@@ -1186,8 +1174,7 @@ define(['jquery'], function ($) {
 	 * @static
 	 * @async
 	 */
-	Uploader.prototype.startUploading = // {{{2
-	function startUploading() {
+	Uploader.prototype.startUploading = function () { // {{{2
 
 		var self = this;
 
@@ -1235,16 +1222,14 @@ define(['jquery'], function ($) {
 	Uploader.exceptions = {};
 
 	/** @typedef {Error} Uploader~IncorrectSuperclass */
-	Uploader.exceptions.IncorrectSuperclass =
-	function IncorrectSuperclass(message) {
+	Uploader.exceptions.IncorrectSuperclass = function (message) {
 		Error.call(this);
 		this.name = 'IncorrectSuperclass';
 		this.message = message || 'Superclass must be an instanceof "DragNDropFileUpload".';
 	};
 
 	/** @typedef {Error} Uploader~IncorrectArgument */
-	Uploader.exceptions.IncorrectArgument =
-	function IncorrectArgument(message, argName) {
+	Uploader.exceptions.IncorrectArgument = function (message, argName) {
 		Error.call(this);
 		this.name = 'IncorrectArgument';
 		if (argName) this.argumentName = argName;
@@ -1258,24 +1243,21 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} Uploader~NoCallback */
-	Uploader.exceptions.NoCallback =
-	function NoCallback(message) {
+	Uploader.exceptions.NoCallback = function (message) {
 		Error.call(this);
 		this.name = 'NoCallback';
 		this.message = message || 'No callback.';
 	};
 
 	/** @typedef {Error} Uploader~NoParams */
-	Uploader.exceptions.NoParams =
-	function NoParams(message) {
+	Uploader.exceptions.NoParams = function (message) {
 		Error.call(this);
 		this.name = 'NoParams';
 		this.message = message || 'No params.';
 	};
 
 	/** @typedef {Error} Uploader~IncorrectParamValue */
-	Uploader.exceptions.IncorrectParamValue =
-	function IncorrectParamValue(message, param) {
+	Uploader.exceptions.IncorrectParamValue = function (message, param) {
 		Error.call(this);
 		this.name = 'IncorrectParamValue';
 		if (param) this.paramName = param;
@@ -1289,8 +1271,7 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} Uploader~RequiredParam */
-	Uploader.exceptions.RequiredParam =
-	function RequiredParam(message, param) {
+	Uploader.exceptions.RequiredParam = function (message, param) {
 		Error.call(this);
 		this.name = 'RequiredParam';
 		if (param) this.paramName = param;
@@ -1304,8 +1285,7 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} Uploader~UnknownParameter */
-	Uploader.exceptions.UnknownParameter =
-	function UnknownParameter(message, param) {
+	Uploader.exceptions.UnknownParameter = function (message, param) {
 		Error.call(this);
 		this.name = 'UnknownParameter';
 		if (param) this.paramName = param;
@@ -1319,40 +1299,35 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} Uploader~UploadingIsStarted */
-	Uploader.exceptions.UploadingIsStarted =
-	function UploadingIsStarted(message) {
+	Uploader.exceptions.UploadingIsStarted = function (message) {
 		Error.call(this);
 		this.name = 'UploadingIsStarted';
 		this.message = message || 'Uploading is started.';
 	};
 
 	/** @typedef {Error} Uploader~UploadingIsNotStarted */
-	Uploader.exceptions.UploadingIsNotStarted =
-	function UploadingIsNotStarted(message) {
+	Uploader.exceptions.UploadingIsNotStarted = function (message) {
 		Error.call(this);
 		this.name = 'UploadingIsNotStarted';
 		this.message = message || 'Uploading is not started.';
 	};
 
 	/** @typedef {Error} Uploader~UploadingIsAlreadyAborted */
-	Uploader.exceptions.UploadingIsAlreadyAborted =
-	function UploadingIsAlreadyAborted(message) {
+	Uploader.exceptions.UploadingIsAlreadyAborted = function (message) {
 		Error.call(this);
 		this.name = 'UploadingIsAlreadyAborted';
 		this.message = message || 'Uploading is already aborted.';
 	};
 
 	/** @typedef {Error} Uploader~UploadingIsFinished */
-	Uploader.exceptions.UploadingIsFinished =
-	function UploadingIsFinished(message) {
+	Uploader.exceptions.UploadingIsFinished = function (message) {
 		Error.call(this);
 		this.name = 'UploadingIsFinished';
 		this.message = message || 'Uploading is finished.';
 	};
 
 	/** @typedef {Error} Uploader~UploadError */
-	Uploader.exceptions.UploadError =
-	function UploadError(message, filename) {
+	Uploader.exceptions.UploadError = function (message, filename) {
 		Error.call(this);
 		this.name = 'UploadError';
 		if (filename) this.filename = filename;
@@ -1366,8 +1341,7 @@ define(['jquery'], function ($) {
 	};
 
 	/** @typedef {Error} Uploader~UnsupportedFeature */
-	Uploader.exceptions.UnsupportedFeature =
-	function UnsupportedFeature(message) {
+	Uploader.exceptions.UnsupportedFeature = function (message) {
 		Error.call(this);
 		this.name = 'UnsupportedFeature';
 		this.message = message || 'Unsupported feature.';
@@ -1378,8 +1352,7 @@ define(['jquery'], function ($) {
 	}
 
 	/** @typedef {Error} Uploader~XHRUploadError */
-	Uploader.exceptions.XHRUploadError =
-	function XHRUploadError(message, filename) {
+	Uploader.exceptions.XHRUploadError = function (message, filename) {
 		Error.call(this);
 		this.name = 'XHRUploadError';
 		if (filename) this.filename = filename;
@@ -1395,8 +1368,7 @@ define(['jquery'], function ($) {
 	inherit(Uploader.exceptions.UploadError.prototype);
 
 	/** @typedef {Error} Uploader~ResponseStatusCodeError */
-	Uploader.exceptions.ResponseStatusCodeError =
-	function ResponseStatusCodeError(message, filename, statusCode) {
+	Uploader.exceptions.ResponseStatusCodeError = function (message, filename, statusCode) {
 		Error.call(this);
 		this.name = 'ResponseStatusCodeError';
 		if (filename) this.filename = filename;
@@ -1415,8 +1387,7 @@ define(['jquery'], function ($) {
 	inherit(Uploader.exceptions.UploadError.prototype);
 
 	/** @typedef {Error} Uploader~ResponseBeforeFinished */
-	Uploader.exceptions.ResponseBeforeFinished =
-	function ResponseBeforeFinished(message, filename) {
+	Uploader.exceptions.ResponseBeforeFinished = function (message, filename) {
 		Error.call(this);
 		this.name = 'ResponseBeforeFinished';
 		if (filename) this.filename = filename;
@@ -1432,8 +1403,7 @@ define(['jquery'], function ($) {
 	inherit(Uploader.exceptions.UploadError.prototype);
 
 	/** @typedef {Error} Uploader~FileReaderIsNotSupported */
-	Uploader.exceptions.FileReaderIsNotSupported =
-	function FileReaderIsNotSupported(message) {
+	Uploader.exceptions.FileReaderIsNotSupported = function (message) {
 		Error.call(this);
 		this.name = 'FileReaderIsNotSupported';
 		this.message = message || 'FileReader is not supported.';
@@ -1442,8 +1412,7 @@ define(['jquery'], function ($) {
 	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
 
 	/** @typedef {Error} Uploader~XMLHttpRequestIsNotSupported */
-	Uploader.exceptions.XMLHttpRequestIsNotSupported =
-	function XMLHttpRequestIsNotSupported(message) {
+	Uploader.exceptions.XMLHttpRequestIsNotSupported = function (message) {
 		Error.call(this);
 		this.name = 'XMLHttpRequestIsNotSupported';
 		this.message = message || 'FileReader is not supported.';
@@ -1452,8 +1421,7 @@ define(['jquery'], function ($) {
 	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
 
 	/** @typedef {Error} Uploader~ArrayBufferIsNotSupported */
-	Uploader.exceptions.ArrayBufferIsNotSupported =
-	function ArrayBufferIsNotSupported(message) {
+	Uploader.exceptions.ArrayBufferIsNotSupported = function (message) {
 		Error.call(this);
 		this.name = 'ArrayBufferIsNotSupported';
 		this.message = message || 'FileReader is not supported.';
@@ -1462,8 +1430,7 @@ define(['jquery'], function ($) {
 	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
 
 	/** @typedef {Error} Uploader~Uint8ArrayIsNotSupported */
-	Uploader.exceptions.Uint8ArrayIsNotSupported =
-	function Uint8ArrayIsNotSupported(message) {
+	Uploader.exceptions.Uint8ArrayIsNotSupported = function (message) {
 		Error.call(this);
 		this.name = 'Uint8ArrayIsNotSupported';
 		this.message = message || 'FileReader is not supported.';
