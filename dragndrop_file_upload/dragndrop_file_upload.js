@@ -17,6 +17,8 @@ define(['jquery'], function ($) {
 
 	var key; // for "for"
 
+	// helpers {{{1
+
 	/**
 	 * Helper for cloning prototypes
 	 *
@@ -28,7 +30,30 @@ define(['jquery'], function ($) {
 		function F() {}
 		F.prototype = proto;
 		return new F();
-	}
+	} // inherit()
+
+	/**
+	 * Check for support features
+	 *
+	 * @private
+	 * @inner
+	 * @return {Uploader~UnsupportedFeature|null} - Exception about non-supported feature or null
+	 */
+	function checkForFeatures() {
+
+		if (!window.FileReader) return new Uploader.exceptions.FileReaderIsNotSupported();
+		if (!window.XMLHttpRequest) return new Uploader.exceptions.XMLHttpRequestIsNotSupported();
+
+		if (!(new XMLHttpRequest()).sendAsBinary) {
+			if (!window.ArrayBuffer) return new Uploader.exceptions.ArrayBufferIsNotSupported();
+			if (!window.Uint8Array) return new Uploader.exceptions.Uint8ArrayIsNotSupported();
+		}
+
+		return null;
+
+	} // checkForFeatures()
+
+	// helpers }}}1
 
 	/**
 	 * @private
@@ -111,14 +136,18 @@ define(['jquery'], function ($) {
 	 * @public
 	 * @param {DragNDropFileUpload~params} params
 	 * @param {DragNDropFileUpload~callback} [callback]
+	 *
 	 * @exception {Error} DragNDropFileUpload~IncorrectArgument
 	 * @exception {Error} DragNDropFileUpload~NoParams
 	 * @exception {Error} DragNDropFileUpload~IncorrectParamValue
 	 * @exception {Error} DragNDropFileUpload~RequiredParam
 	 * @exception {Error} DragNDropFileUpload~DragNDropAreaBlockNotFound
 	 * @exception {Error} DragNDropFileUpload~UnknownParameter
-	 * @exception {Error} DragNDropFileUpload~FileReaderIsNotSupported
-	 * @exception {Error} DragNDropFileUpload~XMLHttpRequestIsNotSupported
+	 *
+	 * @exception {Error} Uploader~FileReaderIsNotSupported
+	 * @exception {Error} Uploader~XMLHttpRequestIsNotSupported
+	 * @exception {Error} Uploader~ArrayBufferIsNotSupported
+	 * @exception {Error} Uploader~Uint8ArrayIsNotSupported
 	 */
 	function DragNDropFileUpload(params, callback) { // {{{1
 
@@ -146,15 +175,8 @@ define(['jquery'], function ($) {
 
 		// validate arguments }}}2
 
-		if (!window.FileReader) {
-			self.makeError(new DragNDropFileUpload.exceptions.FileReaderIsNotSupported());
-			return false;
-		}
-
-		if (!window.XMLHttpRequest) {
-			self.makeError(new DragNDropFileUpload.exceptions.XMLHttpRequestIsNotSupported());
-			return false;
-		}
+		var err = checkForFeatures();
+		if (err !== null) { self.makeError(err); return false; }
 
 		// params list {{{2
 
@@ -463,9 +485,6 @@ define(['jquery'], function ($) {
 	 * @prop {Error} IncorrectMIMEType
 	 * @prop {Error} IncorrectUploadId
 	 * @prop {Error} UploaderNotFoundById
-	 * @prop {Error} UnsupportedFeature
-	 * @prop {Error} FileReaderIsNotSupported
-	 * @prop {Error} XMLHttpRequestIsNotSupported
 	 * @static
 	 * @readOnly
 	 */
@@ -596,37 +615,9 @@ define(['jquery'], function ($) {
 		}
 	};
 
-	/** @typedef {Error} DragNDropFileUpload~UnsupportedFeature */
-	DragNDropFileUpload.exceptions.UnsupportedFeature =
-	function UnsupportedFeature(message) {
-		Error.call(this);
-		this.name = 'UnsupportedFeature';
-		this.message = message || 'Unsupported feature.';
-	};
-
 	for (key in DragNDropFileUpload.exceptions) {
 		DragNDropFileUpload.exceptions[key].prototype = inherit(Error.prototype);
 	}
-
-	/** @typedef {Error} DragNDropFileUpload~FileReaderIsNotSupported */
-	DragNDropFileUpload.exceptions.FileReaderIsNotSupported =
-	function FileReaderIsNotSupported(message) {
-		Error.call(this);
-		this.name = 'FileReaderIsNotSupported';
-		this.message = message || 'FileReader is not supported.';
-	};
-	DragNDropFileUpload.exceptions.FileReaderIsNotSupported.prototype =
-	inherit(DragNDropFileUpload.exceptions.UnsupportedFeature.prototype);
-
-	/** @typedef {Error} DragNDropFileUpload~XMLHttpRequestIsNotSupported */
-	DragNDropFileUpload.exceptions.XMLHttpRequestIsNotSupported =
-	function XMLHttpRequestIsNotSupported(message) {
-		Error.call(this);
-		this.name = 'XMLHttpRequestIsNotSupported';
-		this.message = message || 'FileReader is not supported.';
-	};
-	DragNDropFileUpload.exceptions.XMLHttpRequestIsNotSupported.prototype =
-	inherit(DragNDropFileUpload.exceptions.UnsupportedFeature.prototype);
 
 	// exceptions }}}1
 
@@ -674,14 +665,19 @@ define(['jquery'], function ($) {
 
 	// helpers {{{2
 
+	/**
+	 * @private
+	 * @inner
+	 * @this {XMLHttpRequest}
+	 */
 	function sendAsBinary(body) { // {{{3
 		if (this.sendAsBinary) {
 			// firefox
 			this.sendAsBinary(body);
 		} else {
 			// chrome (W3C spec.)
-			var data = new ArrayBuffer(body.length);
-			var ui8a = new Uint8Array(data, 0);
+			var data = new window.ArrayBuffer(body.length);
+			var ui8a = new window.Uint8Array(data, 0);
 			for (var i=0; i<body.length; i++) {
 				ui8a[i] = (body.charCodeAt(i) & 0xff);
 			}
@@ -746,6 +742,11 @@ define(['jquery'], function ($) {
 	 * @exception {Error} Uploader~IncorrectParamValue
 	 * @exception {Error} Uploader~RequiredParam
 	 * @exception {Error} Uploader~UnknownParameter
+	 *
+	 * @exception {Error} Uploader~FileReaderIsNotSupported
+	 * @exception {Error} Uploader~XMLHttpRequestIsNotSupported
+	 * @exception {Error} Uploader~ArrayBufferIsNotSupported
+	 * @exception {Error} Uploader~Uint8ArrayIsNotSupported
 	 */
 	function Uploader(superclass, params, callback) { // {{{2
 
@@ -781,6 +782,9 @@ define(['jquery'], function ($) {
 		}
 
 		// validate arguments }}}3
+
+		var err = checkForFeatures();
+		if (err !== null) { self.makeError(err); return false; }
 
 		/**
 		 * @public
@@ -1218,6 +1222,12 @@ define(['jquery'], function ($) {
 	 * @prop {Error} XHRUploadError
 	 * @prop {Error} ResponseStatusCodeError
 	 * @prop {Error} ResponseBeforeFinished
+	 *
+	 * @prop {Error} UnsupportedFeature
+	 * @prop {Error} FileReaderIsNotSupported
+	 * @prop {Error} XMLHttpRequestIsNotSupported
+	 * @prop {Error} ArrayBufferIsNotSupported
+	 * @prop {Error} Uint8ArrayIsNotSupported
 	 * @static
 	 * @readOnly
 	 */
@@ -1355,6 +1365,14 @@ define(['jquery'], function ($) {
 		}
 	};
 
+	/** @typedef {Error} Uploader~UnsupportedFeature */
+	Uploader.exceptions.UnsupportedFeature =
+	function UnsupportedFeature(message) {
+		Error.call(this);
+		this.name = 'UnsupportedFeature';
+		this.message = message || 'Unsupported feature.';
+	};
+
 	for (key in Uploader.exceptions) {
 		Uploader.exceptions[key].prototype = inherit(Error.prototype);
 	}
@@ -1413,6 +1431,46 @@ define(['jquery'], function ($) {
 	Uploader.exceptions.ResponseBeforeFinished.prototype =
 	inherit(Uploader.exceptions.UploadError.prototype);
 
+	/** @typedef {Error} Uploader~FileReaderIsNotSupported */
+	Uploader.exceptions.FileReaderIsNotSupported =
+	function FileReaderIsNotSupported(message) {
+		Error.call(this);
+		this.name = 'FileReaderIsNotSupported';
+		this.message = message || 'FileReader is not supported.';
+	};
+	Uploader.exceptions.FileReaderIsNotSupported.prototype =
+	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
+
+	/** @typedef {Error} Uploader~XMLHttpRequestIsNotSupported */
+	Uploader.exceptions.XMLHttpRequestIsNotSupported =
+	function XMLHttpRequestIsNotSupported(message) {
+		Error.call(this);
+		this.name = 'XMLHttpRequestIsNotSupported';
+		this.message = message || 'FileReader is not supported.';
+	};
+	Uploader.exceptions.XMLHttpRequestIsNotSupported.prototype =
+	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
+
+	/** @typedef {Error} Uploader~ArrayBufferIsNotSupported */
+	Uploader.exceptions.ArrayBufferIsNotSupported =
+	function ArrayBufferIsNotSupported(message) {
+		Error.call(this);
+		this.name = 'ArrayBufferIsNotSupported';
+		this.message = message || 'FileReader is not supported.';
+	};
+	Uploader.exceptions.ArrayBufferIsNotSupported.prototype =
+	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
+
+	/** @typedef {Error} Uploader~Uint8ArrayIsNotSupported */
+	Uploader.exceptions.Uint8ArrayIsNotSupported =
+	function Uint8ArrayIsNotSupported(message) {
+		Error.call(this);
+		this.name = 'Uint8ArrayIsNotSupported';
+		this.message = message || 'FileReader is not supported.';
+	};
+	Uploader.exceptions.Uint8ArrayIsNotSupported.prototype =
+	inherit(Uploader.exceptions.UnsupportedFeature.prototype);
+
 	// Uploader exceptions }}}2
 
 	// Uploader class }}}1
@@ -1425,4 +1483,4 @@ define(['jquery'], function ($) {
 
 	return DragNDropFileUpload;
 
-});
+}); // define()
