@@ -7,7 +7,7 @@
  * @requires HTML5 FileAPI
  * @requires XMLHttpRequest
  *
- * @version r3
+ * @version r4
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -672,6 +672,25 @@ define(['jquery'], function ($) {
 
 	// Uploader class {{{1
 
+	// helpers {{{2
+
+	function sendAsBinary(body) { // {{{3
+		if (this.sendAsBinary) {
+			// firefox
+			this.sendAsBinary(body);
+		} else {
+			// chrome (W3C spec.)
+			var data = new ArrayBuffer(body.length);
+			var ui8a = new Uint8Array(data, 0);
+			for (var i=0; i<body.length; i++) {
+				ui8a[i] = (body.charCodeAt(i) & 0xff);
+			}
+			this.send(data);
+		}
+	} // sendAsBinary() }}}3
+
+	// helpers }}}2
+
 	/**
 	 * @private
 	 * @inner
@@ -1052,13 +1071,7 @@ define(['jquery'], function ($) {
 
 			body += '--' + boundary + '--';
 
-			if (self._xhr.sendAsBinary) {
-				// firefox
-				self._xhr.sendAsBinary(body);
-			} else {
-				// chrome (W3C spec.)
-				self._xhr.send(body);
-			}
+			sendAsBinary.call(self._xhr, body);
 
 		}; // self._reader.onload() }}}3
 
