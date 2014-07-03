@@ -1,13 +1,15 @@
 /*!
  * Placeholder logic handler
  *
- * @version r1
+ * @version r2
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
  */
 
 define(['jquery', 'get_val'], function ($, getVal) {
+
+	var bindSuffix = '.form_placeholder';
 
 	/**
 	 * Handler
@@ -20,28 +22,27 @@ define(['jquery', 'get_val'], function ($, getVal) {
 		var $placeholder = $label.find('span');
 
 		function blurHandler() {
-			if ($(this).attr('name') === 'subject') {
-				if ($(this).val() === '') {
-					$placeholder.stop().show();
-				} else if ($(this).val() !== '') {
-					$placeholder.stop().hide();
-				}
+			if ($(this).val() === '') {
+				$placeholder.stop().fadeIn(getVal('animationSpeed'));
 			} else {
-				if ($(this).val() === '') {
-					$placeholder.stop().fadeIn(getVal('animationSpeed'));
-				} else if ($(this).val() !== '') {
-					$placeholder.stop().fadeOut(getVal('animationSpeed'));
-				}
-			}
-		}
-
-		function focusHandler() {
-			if ($(this).attr('name') !== 'subject') {
 				$placeholder.stop().fadeOut(getVal('animationSpeed'));
 			}
 		}
 
-		$label.find('input, textarea').focus(focusHandler).blur(blurHandler).trigger('blur');
+		function focusHandler() {
+			$placeholder.stop().fadeOut(getVal('animationSpeed'));
+		}
+
+		$label.find('input, textarea')
+			.on('focus' + bindSuffix, focusHandler)
+			.on('blur' + bindSuffix, blurHandler)
+			.trigger('blur' + bindSuffix)
+			.each(function () {
+				$(this).data('form_placeholder', {
+					focusHandler: focusHandler,
+					blurHandler: blurHandler
+				});
+			});
 
 	}; // return ()
 
