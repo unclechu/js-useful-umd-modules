@@ -1,7 +1,7 @@
-js-useful-amd-modules
-=====================
+Useful AMD modules
+==================
 
-Some of useful reusable AMD (RequireJS) modules that doesn't have own repository.
+Some of useful reusable AMD ([RequireJS](http://requirejs.org/)) modules that doesn't have own repository.
 
 See also
 ========
