@@ -1,7 +1,7 @@
 /*!
  * Check JSON data for correct and "status" is "success"
  *
- * @version r2
+ * @version r3
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -54,6 +54,7 @@ define(function () {
 
 		try {
 			parsed = JSON.parse(jsonData);
+			if (typeof parsed !== 'object') throw new Error('Must be an object.');
 		} catch (err) {
 			return makeError(new exports.exceptions.ParseJSONError(null, err), callback);
 		}
@@ -202,5 +203,3 @@ define(function () {
 	return exports;
 
 });
-
-// vim: set noet ts=4 sts=4 sw=4 fenc=utf-8 foldmethod=marker :
