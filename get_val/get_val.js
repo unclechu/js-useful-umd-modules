@@ -1,35 +1,39 @@
-/*!
+/**
  * Provide "getVal" for getting values from "values" module
  *
- * @version r3
+ * @version r4
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
  */
 
-define(['values'],
-function (values) {
+define(['values'], function (values) {
 
 	var required = values.required;
 	values = values.values;
 
-	function getVal() {
+	// helpers {{{1
 
+	function inherit(proto) {
+		if (Object.create) return Object.create(proto);
+		function F() {}
+		F.prototype = proto;
+		return new F();
+	}
+
+	// helpers }}}1
+
+	function getVal() {
 		// delegate to "get" method
 		return getVal.get.apply(this, arguments);
-
 	}
 
 	function checkRequired() {
-
-		$.each(required, function (i, key) {
-
-			if (!(key in values)) {
-				throw new getVal.exceptions.RequiredIsNotSet(null, key);
+		for (var i=0; i<required.length; i++) {
+			if (!(required[i] in values)) {
+				throw new getVal.exceptions.RequiredIsNotSet(null, required[i]);
 			}
-
-		});
-
+		}
 	}
 
 	/**
@@ -37,8 +41,7 @@ function (values) {
 	 *
 	 * @public
 	 */
-	getVal.set =
-	function set(key, val) {
+	getVal.set = function (key, val) {
 
 		if (typeof key !== 'string') {
 			throw new getVal.exceptions.IncorrectKey(null, typeof(key));
@@ -46,14 +49,12 @@ function (values) {
 
 		var found = false;
 
-		$.each(required, function(i, rKey) {
-
-			if (rKey === key) found = true;
-
-		});
+		for (var i=0; i<required.length; i++) {
+			if (required[i] === key) found = true;
+		}
 
 		if (!found) {
-			throw new getVal.exceptions.NotInRequiredList(null, key);
+			throw new getVal.exceptions.NoKeyInRequiredList(null, key);
 		}
 
 		values[key] = val;
@@ -61,8 +62,7 @@ function (values) {
 	};
 
 	/** @public */
-	getVal.get =
-	function get(key, ignoreRequired) {
+	getVal.get = function (key, ignoreRequired) {
 
 		if (!ignoreRequired) checkRequired();
 
@@ -86,21 +86,19 @@ function (values) {
 	 */
 	getVal.exceptions = {};
 
-	getVal.exceptions.IncorrectKey =
-	function IncorrectKey(message, keyType) {
+	getVal.exceptions.IncorrectKey = function (message, keyType) {
 		Error.call(this);
 		this.name = 'IncorrectKey';
 		if (message) {
 			this.message = message;
 		} else {
 			this.message = 'Incorrect key type';
-			if (key) this.message += ' ("'+ keyType +'")';
+			if (keyType) this.message += ' ("'+ keyType +'")';
 			this.message += ', must be a string';
 		}
 	};
 
-	getVal.exceptions.KeyIsNotExists =
-	function KeyIsNotExists(message, key) {
+	getVal.exceptions.KeyIsNotExists = function (message, key) {
 		Error.call(this);
 		this.name = 'KeyIsNotExists';
 		if (message) {
@@ -112,8 +110,7 @@ function (values) {
 		}
 	};
 
-	getVal.exceptions.RequiredIsNotSet =
-	function RequiredIsNotSet(message, key) {
+	getVal.exceptions.RequiredIsNotSet = function (message, key) {
 		Error.call(this);
 		this.name = 'RequiredIsNotSet';
 		if (message) {
@@ -124,25 +121,17 @@ function (values) {
 		}
 	};
 
-	getVal.exceptions.NotInRequiredList =
-	function NotInRequiredList(message, key) {
+	getVal.exceptions.NoKeyInRequiredList = function (message, key) {
 		Error.call(this);
-		this.name = 'NotInRequiredList';
+		this.name = 'NoKeyInRequiredList';
 		if (message) {
 			this.message = message;
 		} else {
-			this.message = 'Key';
+			this.message = 'No key';
 			if (key) this.message += ' "'+ key +'"';
-			this.message += ' not in the required list';
+			this.message += ' in required list';
 		}
 	};
-
-	function inherit(proto) {
-		if (Object.create) return Object.create(proto);
-		function F() {}
-		F.prototype = proto;
-		return new F();
-	}
 
 	for (var key in getVal.exceptions) {
 		getVal.exceptions[key].prototype = inherit(Error.prototype);
@@ -153,5 +142,3 @@ function (values) {
 	return getVal;
 
 }); // define()
-
-// vim: set noet ts=4 sts=4 sw=4 fenc=utf-8 foldmethod=marker :
