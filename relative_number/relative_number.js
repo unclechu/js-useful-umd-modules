@@ -48,8 +48,6 @@ define(['jquery'], function ($) {
 	 * @inner
 	 * @param {params} params
 	 * @return Calculated value
-	 * @TODO relMin less than zero
-	 * @TODO invert min/max
 	 */
 	function model(params) { // {{{1
 
