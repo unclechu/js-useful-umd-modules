@@ -2,7 +2,7 @@
  * Dynamic loading API
  * Required values by getVal: dynamicApiLoadInterval
  *
- * @version r2
+ * @version r3
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -17,12 +17,10 @@ define(['jquery', 'get_val'], function ($, getVal) {
 		var retVal;
 
 		$.each(toLoadList, function (i, item) {
-
 			if (item.scriptPath === scriptPath) {
 				retVal = item;
 				return false;
 			}
-
 		});
 
 		if (!retVal) {
@@ -50,11 +48,9 @@ define(['jquery', 'get_val'], function ($, getVal) {
 		var item;
 
 		$.each(toLoadList, function (i, item) {
-
 			if (item.scriptPath === scriptPath) {
 				alreadyInList = true;
 			}
-
 		});
 
 		if (!alreadyInList) {
@@ -74,14 +70,10 @@ define(['jquery', 'get_val'], function ($, getVal) {
 		}
 
 		try {
-
 			item = getItem(scriptPath);
-
 		} catch (err) {
-
 			setTimeout( $.proxy(callback, null, err), 1 );
 			return;
-
 		}
 
 		function waiter() {
@@ -110,14 +102,10 @@ define(['jquery', 'get_val'], function ($, getVal) {
 		}
 
 		if (item.loaded) {
-
 			setTimeout( $.proxy(callback, null, null, window[item.varName]), 1 );
-
 		} else {
-
 			item.cb.push(callback);
 			item.timerId = setTimeout(waiter, 1);
-
 		}
 
 	} // dynamicLoadApi() }}}1
@@ -130,8 +118,7 @@ define(['jquery', 'get_val'], function ($, getVal) {
 	 */
 	dynamicLoadApi.exceptions = {};
 
-	dynamicLoadApi.exceptions.ItemNotFound =
-	function ItemNotFound(message, scriptPath) {
+	dynamicLoadApi.exceptions.ItemNotFound = function (message, scriptPath) {
 		Error.call(this);
 		this.name = 'ItemNotFound';
 		if (this.message) {
@@ -158,6 +145,4 @@ define(['jquery', 'get_val'], function ($, getVal) {
 
 	return dynamicLoadApi;
 
-}); // define
-
-// vim: set noet ts=4 sts=4 sw=4 fenc=utf-8 foldmethod=marker :
+}); // define()
