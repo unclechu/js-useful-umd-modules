@@ -1,5 +1,5 @@
-Useful AMD modules
-==================
+Useful AMD/CommonJS modules
+===========================
 
 Some of useful reusable [AMD](https://en.wikipedia.org/wiki/Asynchronous_module_definitio) ([RequireJS](http://requirejs.org/)) / [CommonJS](http://en.wikipedia.org/wiki/CommonJS) ([Browserify](http://browserify.org/)) modules that doesn't have own repository.
 
