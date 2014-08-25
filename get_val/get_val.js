@@ -1,5 +1,5 @@
 /**
- * Provide class for getting value by key
+ * Provides class for getting value by key
  *
  * @version r6
  * @author Viacheslav Lotsmanov
