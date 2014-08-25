@@ -1,7 +1,7 @@
 Useful AMD modules
 ==================
 
-Some of useful reusable AMD ([RequireJS](http://requirejs.org/)) modules that doesn't have own repository.
+Some of useful reusable [AMD](https://en.wikipedia.org/wiki/Asynchronous_module_definitio) ([RequireJS](http://requirejs.org/)) / [CommonJS](http://en.wikipedia.org/wiki/CommonJS) ([Browserify](http://browserify.org/)) modules that doesn't have own repository.
 
 See also
 ========
