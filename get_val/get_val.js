@@ -1,7 +1,7 @@
 /**
  * Provides class for getting value by key
  *
- * @version r7
+ * @version r8
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -41,7 +41,7 @@
 	 * @returns {function} getWrapper
 	 */
 	var exports = function (values, required) { // {{{1
-		self = this;
+		var self = this;
 
 		// validation of arguments {{{2
 
