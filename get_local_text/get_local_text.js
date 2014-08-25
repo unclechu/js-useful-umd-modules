@@ -1,7 +1,7 @@
 /**
  * Provides class for get localized text by key
  *
- * @version r5
+ * @version r6
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -41,7 +41,7 @@
 	 * @returns {function} getWrapper
 	 */
 	var exports = function (values, local) { // {{{1
-		self = this;
+		var self = this;
 
 		// validation of arguments {{{2
 
@@ -147,7 +147,7 @@
 
 		// "local" argument validation
 		if (typeof local !== 'string')
-			throw new self.exceptions.IncorrectArgument(
+			throw new this.exceptions.IncorrectArgument(
 				null, 'local', typeof(local), 'string');
 
 		if (!this._values[local])
