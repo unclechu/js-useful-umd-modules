@@ -1,7 +1,7 @@
 /**
  * Provides class for get localized text by key
  *
- * @version r4
+ * @version r5
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -65,10 +65,12 @@
 		self.setCurLocal(local);
 
 		/** @public */
-		function getWrapper() {
-			// delegate to "get" method
-			return self.get.apply(self, arguments);
-		}
+		var getWrapper = (function (self) {
+			return function () {
+				// delegate to "get" method
+				return self.get.apply(self, arguments);
+			};
+		})(self);
 
 		/** @public */ getWrapper.super = self;
 
