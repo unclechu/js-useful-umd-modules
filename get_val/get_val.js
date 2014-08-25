@@ -1,13 +1,21 @@
 /**
  * Provide "getVal" for getting values from "values" module
  *
- * @version r4
+ * @version r5
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
  */
 
-define(['values'], function (values) {
+(function (deps, factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD (RequireJS)
+		define(deps, factory);
+	} else if (typeof module === 'object' && typeof module.exports === 'object') {
+		// CommonJS (Browserify)
+		module.exports = factory(require('../values'));
+	} else throw new Error('Unsupported architecture');
+})(['values'], function (values) {
 
 	var required = values.required;
 	values = values.values;
@@ -141,4 +149,4 @@ define(['values'], function (values) {
 
 	return getVal;
 
-}); // define()
+}); // factory()
