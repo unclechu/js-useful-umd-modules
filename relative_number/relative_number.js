@@ -1,15 +1,27 @@
 /**
  * Calculate relative number by relative min and max sources
  *
- * @version r1
+ * @version r2
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
  */
 
-define(['jquery'], function ($) {
+(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD (RequireJS)
+		define(['jquery'], factory);
+	} else if (typeof module === 'object' && typeof module.exports === 'object') {
+		// CommonJS (Browserify)
+		module.exports = factory(require('jquery'));
+	} else {
+		throw new Error('Unsupported architecture');
+	}
+})(function ($) {
 
-	var exports, undefined;
+	'use strict';
+
+	var exports;
 
 	// helpers {{{1
 
@@ -138,7 +150,7 @@ define(['jquery'], function ($) {
 	var exceptions = exports.exceptions = {};
 
 	/** @typedef {Error} IncorrectParamsType */
-	exceptions.IncorrectParamsType = function (message, paramsType) {
+	exceptions.IncorrectParamsType = function (message, paramsType) { // {{{2
 		Error.call(this);
 		this.name = 'IncorrectParamsType';
 		if (message) {
@@ -146,38 +158,35 @@ define(['jquery'], function ($) {
 		} else {
 			this.message = 'Params must be a plain object';
 			if (paramsType) this.message += ' (now is "'+ paramsType +'")';
-			this.message += '.';
 		}
-	};
+	}; // }}}2
 
 	/** @typedef {Error} RequiredParam */
-	exceptions.RequiredParam = function (message, paramName) {
+	exceptions.RequiredParam = function (message, paramName) { // {{{2
 		Error.call(this);
 		this.name = 'RequiredParam';
 		if (message) {
 			this.message = message;
 		} else {
-			this.message = 'Required param ';
+			this.message = 'Required param';
 			if (paramName) this.message += ' "'+ paramName +'"';
-			this.message += '.';
 		}
-	};
+	}; // }}}2
 
 	/** @typedef {Error} UnknownParam */
-	exceptions.UnknownParam = function (message, paramName) {
+	exceptions.UnknownParam = function (message, paramName) { // {{{2
 		Error.call(this);
 		this.name = 'UnknownParam';
 		if (message) {
 			this.message = message;
 		} else {
-			this.message = 'Unknown param ';
+			this.message = 'Unknown param';
 			if (paramName) this.message += ' "'+ paramName +'"';
-			this.message += '.';
 		}
-	};
+	}; // }}}2
 
 	/** @typedef {Error} IncorrectParamValue */
-	exceptions.IncorrectParamValue =
+	exceptions.IncorrectParamValue = // {{{2
 	function (message, paramName, paramType, mustBeType) {
 		Error.call(this);
 		this.name = 'IncorrectParamValue';
@@ -189,9 +198,8 @@ define(['jquery'], function ($) {
 			this.message += ' param value type';
 			if (paramType) this.message += ': "'+ paramType +'"';
 			if (mustBeType) this.message += ', must be a "'+ mustBeType +'"';
-			this.message += '.';
 		}
-	};
+	}; // }}}2
 
 	for (var key in exceptions)
 		exceptions[key].prototype = inherit(Error.prototype);
@@ -200,4 +208,4 @@ define(['jquery'], function ($) {
 
 	return exports;
 
-}); // define()
+}); // factory()
