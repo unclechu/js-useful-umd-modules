@@ -1,101 +1,161 @@
-/*!
- * Dynamic loading images
+/**
+ * Dynamic loading images abstraction class
  *
  * @module load_img
- * @requires get_val ('loadImgTimeout')
- * 
- * @version r3
+ * @requires jquery
+ *
+ * @version r4
  * @author Viacheslav Lotsmanov
- * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
- * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
+ * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-commonjs-modules/blob/master/GPLv3-LICENSE)
+ * @see {@link https://github.com/unclechu/js-useful-amd-commonjs-modules/|GitHub}
  */
 
-define(['get_val', 'jquery'], function (getVal, $) {
+(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD (RequireJS)
+		define(['jquery'], function ($) { factory($); });
+	} else if (typeof module === 'object' && typeof module.exports === 'object') {
+		// CommonJS (Browserify)
+		module.exports = factory(require('jquery'));
+	} else {
+		throw new Error('Unsupported architecture');
+	}
+})(function ($, undefined) {
+
+	'use strict';
+
+	// helpers {{{1
+
+	/**
+	 * @private
+	 * @inner
+	 */
+	function inherit(proto) {
+		if (Object.create) return Object.create(proto);
+		function F() {}
+		F.prototype = proto;
+		return new F();
+	}
+
+	// helpers }}}1
+
+	/**
+	 * @class
+	 * @public
+	 * @param {Number|Float} [loadImgTimeout=20] - Loading image timeout in seconds
+	 * @returns {function} loadImgWrapper
+	 */
+	var exports = function (loadImgTimeout) { // {{{1
+		var self = this;
+
+		// validation of arguments {{{2
+
+		if (loadImgTimeout && (typeof loadImgTimeout !== 'number'))
+			throw new self.exceptions.IncorrectArgument(
+				null, 'loadImgTimeout', typeof(loadImgTimeout),
+				['number', 'float']);
+
+		// validation of arguments }}}2
+
+		/** @private */ self._loadImgTimeout = (loadImgTimeout || 20);
+
+		/** @public */
+		var loadImgWrapper = (function (self) {
+			return function () {
+				// delegate to "loadImg" method
+				return self.loadImg.apply(self, arguments);
+			};
+		})(self);
+
+		/** @public */ loadImgWrapper.super = self;
+
+		return loadImgWrapper;
+	}; // constructor to exports }}}1
+
+	/**
+	 * @private
+	 * @inner
+	 * @static
+	 * @param {Error} err
+	 */
+	function makeError(err, cb) { // {{{1
+		if (cb)
+			setTimeout($.proxy(cb, null, err), 0);
+		else
+			throw err;
+	} // makeError() }}}1
 
 	/**
 	 * @public
 	 * @example
-	 *   define(['load_img'], function (loadImg) {
-	 *     loadImg('/images/picture.png', function (err, img) {
-	 *       if (err) alert(err.toString());
-	 *       $('body').append('<img alt="" src="'+ img.src +'" width="'+ img.width +'" height="'+ img.height +'" />');
-	 *     });
+	 *   loadImg('/images/picture.png', function (err, img) {
+	 *     if (err) return alert(err.toString());
+	 *     $('body').append('<img alt="" src="'+ img.src +'" width="'+ img.width +'" height="'+ img.height +'" />');
 	 *   });
 	 */
-	function loadImg(link, callback) {
+	exports.prototype.loadImg = function loadImg(link, callback) { // {{{1
 
-		if (typeof callback !== 'function') {
-			throw new Error('Incorrect "callback" argument ("'+
-				typeof(callback) +'"), must be a "function"');
-		}
+		var self = this;
 
-		if (typeof link !== 'string') {
-			callback(new loadImg.exceptions.IncorrectLink(null, typeof(link)));
-		}
+		// validation of arguments {{{2
+
+		if (typeof callback !== 'function')
+			return makeError(new self.exceptions.IncorrectArgument(
+				null, 'callback', typeof(callback), 'function'), null);
+
+		if (typeof link !== 'string')
+			return makeError(new self.exceptions.IncorrectLink(
+				null, typeof(link)), callback);
+
+		// validation of arguments }}}2
 
 		var $img = $('<img/>');
 		var timerId;
 		var loaded = false;
 
 		/** @private */
-		function destroy() {
-
+		function destroy() { // {{{2
 			killTimer();
 			$img.off('load');
 			$img = undefined;
-
-		} // destroy()
+		} // destroy() }}}2
 
 		/** @private */
-		function timeout() {
-
+		function timeout() { // {{{2
 			if (loaded) return false;
 
 			destroy();
-			callback(new loadImg.exceptions.Timeout());
-
-		} // timeout()
+			makeError(new self.exceptions.Timeout(), callback);
+		} // timeout() }}}2
 
 		/** @private */
-		function killTimer() {
-
+		function killTimer() { // {{{2
 			if (timerId !== undefined) {
-
 				clearTimeout(timerId);
 				timerId = undefined;
-
 			}
-
-		} // killTimer()
+		} // killTimer() }}}2
 
 		/** @private */
-		function loadHandler() {
-
-			var img = this;
-
+		function loadHandler(img) { // {{{2
 			loaded = true;
 			killTimer();
 
-			// async
 			setTimeout(function () {
-
 				callback(null, {
 					src: img.src,
 					width: img.width,
 					height: img.height
 				});
-
 				destroy();
+			}, 0);
+		} // loadHandler() }}}2
 
-			}, 1);
+		$img.on('load', function () { loadHandler(this); }).attr('src', link);
 
-		} // loadHandler()
+		timerId = setTimeout(timeout, Math.round(self._loadImgTimeout * 1000));
 
-		$img.on('load', loadHandler).attr('src', link);
-
-		timerId = setTimeout(timeout, getVal('loadImgTimeout'));
-
-	} // loadImg()
+	}; // loadImg() }}}1
 
 	/* exceptions {{{ */
 
@@ -103,10 +163,32 @@ define(['get_val', 'jquery'], function (getVal, $) {
 	 * @static
 	 * @public
 	 */
-	loadImg.exceptions = {};
+	var exceptions = exports.exceptions = exports.prototype.exceptions = {};
 
-	loadImg.exceptions.IncorrectLink =
-	function IncorrectLink(message, type) {
+	exceptions.IncorrectArgument = function (message, name, type, mustBe) { // {{{2
+		Error.call(this);
+		this.name = 'IncorrectArgument';
+		if (message) {
+			this.message = message;
+		} else {
+			this.message = 'Incorrect';
+			if (name) this.message += ' "'+ name +'"';
+			this.message += ' argument type';
+			if (type) this.message += ': "'+ type +'"';
+			if (typeof mustBe === 'object' && mustBe.length) {
+				this.message += ', must be a(n)';
+				for (var i=0; i<mustBe.length; i++) {
+					this.message += ' ';
+					if (i>0) this.message += 'or ';
+					this.message += '"'+ mustBe[i] +'"';
+				}
+			} else if (typeof mustBe === 'string') {
+				this.message += ', must be a(n) "'+ mustBe +'"';
+			}
+		}
+	}; // }}}2
+
+	exceptions.IncorrectLink = function (message, type) { // {{{2
 		Error.call(this);
 		this.name = 'IncorrectLink';
 		if (message) {
@@ -116,28 +198,19 @@ define(['get_val', 'jquery'], function (getVal, $) {
 			if (type) this.message += ' ("'+ type +'")';
 			this.message += ', must be a "string"';
 		}
-	};
+	}; // }}}2
 
-	loadImg.exceptions.Timeout =
-	function Timeout(message) {
+	exceptions.Timeout = function (message) { // {{{2
 		Error.call(this);
 		this.name = 'Timeout';
 		this.message = message || 'Loading image timeout';
-	};
+	}; // }}}2
 
-	function inherit(proto) {
-		if (Object.create) return Object.create(proto);
-		function F() {}
-		F.prototype = proto;
-		return new F();
-	}
-
-	for (var key in loadImg.exceptions) {
-		loadImg.exceptions[key].prototype = inherit(Error.prototype);
-	}
+	for (var key in exceptions)
+		exceptions[key].prototype = inherit(Error.prototype);
 
 	/* exceptions }}} */
 
-	return loadImg;
+	return exports;
 
-}); // define()
+}); // factory()
