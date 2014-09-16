@@ -1,7 +1,7 @@
-Useful AMD/CommonJS modules
-===========================
+Useful UMD modules
+==================
 
-Some of useful reusable [AMD](https://en.wikipedia.org/wiki/Asynchronous_module_definitio) ([RequireJS](http://requirejs.org/)) / [CommonJS](http://en.wikipedia.org/wiki/CommonJS) ([Browserify](http://browserify.org/)) modules that doesn't have own repository.
+It can be used with [RequireJS](http://requirejs.org/), [Browserify](http://browserify.org/) or without any solution for module definition, see more about this here: https://github.com/umdjs/umd
 
 See also
 ========
