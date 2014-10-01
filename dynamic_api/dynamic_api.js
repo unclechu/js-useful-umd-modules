@@ -1,7 +1,7 @@
 /**
  * Dynamic loading API class
  *
- * @version r4
+ * @version r5
  * @author Viacheslav Lotsmanov
  * @license GNU/GPLv3 by Free Software Foundation (https://github.com/unclechu/js-useful-amd-modules/blob/master/GPLv3-LICENSE)
  * @see {@link https://github.com/unclechu/js-useful-amd-modules/|GitHub}
@@ -10,7 +10,7 @@
 (function (factory) {
 	if (typeof define === 'function' && define.amd) {
 		// AMD (RequireJS)
-		define(['jquery'], function ($) { factory($, window); });
+		define(['jquery'], function ($) { return factory($, window); });
 	} else if (typeof module === 'object' && typeof module.exports === 'object') {
 		// CommonJS (Browserify)
 		module.exports = factory(require('jquery'), window);
