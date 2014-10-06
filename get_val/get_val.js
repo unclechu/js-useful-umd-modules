@@ -31,16 +31,22 @@ GetVal = (function(){
   GetVal.displayName = 'GetVal';
   var prototype = GetVal.prototype, constructor = GetVal;
   function GetVal(values, required){
-    var i$, len$, key, getWrapper;
+    var isArray, i$, len$, key, getWrapper;
     required == null && (required = null);
+    isArray = function(arg){
+      return Object.prototype.toString.call(arg) === '[object Array]';
+    };
     if (typeof values !== 'object') {
       throw new this.exceptions.IncorrectArgument(null, 'values', typeof values, 'object');
     }
     if (typeof values.values !== 'object') {
       throw new this.exceptions.RequiredArgumentKey(null, 'values', 'values', typeof values.values, 'object');
     }
-    if (typeof values.required !== 'object') {
-      throw new this.exceptions.RequiredArgumentKey(null, 'values', 'required', typeof values.required, 'object');
+    if (isArray(values.values)) {
+      throw new this.exceptions.RequiredArgumentKey(null, 'values', 'values', 'array', 'object');
+    }
+    if (!isArray(values.required)) {
+      throw new this.exceptions.RequiredArgumentKey(null, 'values', 'required', typeof values.required, 'array');
     }
     if (required && typeof required !== 'object') {
       throw new this.exceptions.IncorrectArgument(null, 'required', typeof required, 'object');

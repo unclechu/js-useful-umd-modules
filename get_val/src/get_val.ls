@@ -24,6 +24,9 @@ class GetVal
 
 		# arguments validation
 
+		is-array = (arg) ->
+			return Object.prototype.toString.call(arg) is '[object Array]'
+
 		# "values" arg
 		if typeof values is not \object
 			throw new @exceptions.IncorrectArgument null ,
@@ -31,9 +34,12 @@ class GetVal
 		if typeof values.values is not \object
 			throw new @exceptions.RequiredArgumentKey null ,
 				\values , \values , typeof values.values , \object
-		if typeof values.required is not \object
+		if is-array values.values
+			throw new @exceptions.RequiredArgumentKey null ,
+				\values , \values , \array , \object
+		if not is-array values.required
 			throw new @exceptions.RequiredArgumentKey null,
-				\values , \required , typeof values.required , \object
+				\values , \required , typeof values.required , \array
 
 		# "required" arg
 		if required and typeof required is not \object
