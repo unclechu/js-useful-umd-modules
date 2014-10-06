@@ -22,9 +22,9 @@
 		else
 			@message = \Incorrect
 			if arg-name then @message += " \"#{arg-name}\""
-			@message = ' argument key'
+			@message += ' argument key'
 			if key-name then @message += " \"#{key-name}\""
-			@message = ' type'
+			@message += ' type'
 			if key-type then @message += ": \"#{key-type}\""
 			if key-must-be then @message += ", must be a(n) \"#{key-must-be}\""
 			@message += \.
@@ -50,7 +50,7 @@
 		else
 			@message = \Key
 			if key then @message += " \"#{key}\""
-			@message += 'is not exists.'
+			@message += ' is not exists.'
 		@key = key
 
 @exceptions.RequiredIsNotSet = class extends Error
@@ -68,7 +68,7 @@
 		if message
 			@message = message
 		else
-			@message += 'No key'
+			@message = 'No key'
 			if key then @message += " \"#{key}\""
 			@message += ' in required list.'
 		@key = key

@@ -173,11 +173,11 @@ GetVal = (function(){
         if (argName) {
           this.message += " \"" + argName + "\"";
         }
-        this.message = ' argument key';
+        this.message += ' argument key';
         if (keyName) {
           this.message += " \"" + keyName + "\"";
         }
-        this.message = ' type';
+        this.message += ' type';
         if (keyType) {
           this.message += ": \"" + keyType + "\"";
         }
@@ -219,7 +219,7 @@ GetVal = (function(){
         if (key) {
           this.message += " \"" + key + "\"";
         }
-        this.message += 'is not exists.';
+        this.message += ' is not exists.';
       }
       this.key = key;
     }
@@ -247,7 +247,7 @@ GetVal = (function(){
       if (message) {
         this.message = message;
       } else {
-        this.message += 'No key';
+        this.message = 'No key';
         if (key) {
           this.message += " \"" + key + "\"";
         }
