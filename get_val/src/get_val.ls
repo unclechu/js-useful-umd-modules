@@ -18,6 +18,9 @@
  * @param {!Object.<*>} values - Key-value object of values
  * @param {?Object.<*>} [required] - Key-value object to set required values
  * @returns {function} "get" method wrapper (you can get value from example of class directly as by function)
+ *
+ * @throws {GetVal~IncorrectArgument}
+ * @throws {GetVal~RequiredArgumentKey}
  */
 class GetVal
 	(values , required=null) ->
@@ -83,6 +86,8 @@ class GetVal
 	 * @method
 	 * @name GetVal~_check-required
 	 * @static
+	 *
+	 * @throws {GetVal~RequiredIsNotSet}
 	 */
 	_check-required: !->
 		for i in @_required
@@ -99,6 +104,9 @@ class GetVal
 	 * @static
 	 * @param {string} key - Key that in "required" list
 	 * @param {*} val - Value that can be got in the future by "key"
+	 *
+	 * @throws {GetVal~IncorrectKey}
+	 * @throws {GetVal~NoKeyInRequiredList}
 	 */
 	set: (key, val) !->
 		found = false
@@ -125,6 +133,10 @@ class GetVal
 	 * @param {string} key - Get value by this key
 	 * @param {boolean} ignoreRequired - Get value even if all required values is not setted yet
 	 * @returns {*} Value by key
+	 *
+	 * @throws {GetVal~RequiredIsNotSet}
+	 * @throws {GetVal~IncorrectKey}
+	 * @throws {GetVal~KeyIsNotExists}
 	 */
 	get: (key, ignore-required) ->
 		if not ignore-required then @_check-required!

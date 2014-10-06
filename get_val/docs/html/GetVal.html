@@ -185,6 +185,34 @@
     
 
     
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">GetVal~IncorrectArgument</span>
+
+
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">GetVal~RequiredArgumentKey</span>
+
+
+    
+    </div>
+
+</li>
+        </ul>
 
     
     <h5>Returns:</h5>
@@ -232,7 +260,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="_required"><span class="type-signature">&lt;private, inner> </span>_required<span class="type-signature"> :Array</span></h4>
+    <h4 class="name" id="_required"><span class="type-signature">&lt;private, inner> </span>_required<span class="type-signature"> :Array.&lt;string></span></h4>
 
     
 </dt>
@@ -244,7 +272,7 @@
         <ul>
             <li>
                 
-<span class="param-type">Array</span>
+<span class="param-type">Array.&lt;string></span>
 
 
             </li>
@@ -302,6 +330,280 @@
             <li>
                 
 <span class="param-type">!Object.&lt;*></span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="exceptions"><span class="type-signature">&lt;inner, readonly> </span>exceptions<span class="type-signature"> :Object.&lt;Error></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Exceptions
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Object.&lt;Error></span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+        <h5 class="subsection-title">Properties:</h5>
+
+        <dl>
+
+<table class="props">
+    <thead>
+    <tr>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">GetVal~IncorrectArgument</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Incorrect argument type for constructor</td>
+        </tr>
+
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">GetVal~RequiredArgumentKey</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Required argument key is not set or has incorrect type (for constructor)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">GetVal~IncorrectKey</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Incorrect key type for get/set methods</td>
+        </tr>
+
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">GetVal~KeyIsNotExists</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Value not found by key</td>
+        </tr>
+
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">GetVal~RequiredIsNotSet</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Attempt to get value before all required values sets</td>
+        </tr>
+
+    
+
+        <tr>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">GetVal~NoKeyInRequiredList</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Attempt to set required value by key that not in required list</td>
+        </tr>
+
+    
+    </tbody>
+</table></dl>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="super"><span class="type-signature">&lt;inner> </span>super<span class="type-signature"> :<a href="GetVal.html">GetVal</a></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Link to class example for "get" method wrapper
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="GetVal.html">GetVal</a></span>
 
 
             </li>
@@ -405,6 +707,21 @@
     
 
     
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">GetVal~RequiredIsNotSet</span>
+
+
+    
+    </div>
+
+
+        
 
     
 
@@ -542,6 +859,47 @@
     
 
     
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">GetVal~RequiredIsNotSet</span>
+
+
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">GetVal~IncorrectKey</span>
+
+
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">GetVal~KeyIsNotExists</span>
+
+
+    
+    </div>
+
+</li>
+        </ul>
 
     
     <h5>Returns:</h5>
@@ -702,6 +1060,34 @@
     
 
     
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">GetVal~IncorrectKey</span>
+
+
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        
+<span class="param-type">GetVal~NoKeyInRequiredList</span>
+
+
+    
+    </div>
+
+</li>
+        </ul>
 
     
 
@@ -730,7 +1116,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Oct 06 2014 07:31:21 GMT+0400 (MSK)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha5</a> on Mon Oct 06 2014 08:00:26 GMT+0400 (MSK)
 </footer>
 
 <script> prettyPrint(); </script>

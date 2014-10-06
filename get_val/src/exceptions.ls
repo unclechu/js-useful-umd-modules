@@ -1,3 +1,18 @@
+/**
+ * Exceptions
+ *
+ * @public
+ * @name GetVal~exceptions
+ * @type {Object.<Error>}
+ * @prop {GetVal~IncorrectArgument} - Incorrect argument type for constructor
+ * @prop {GetVal~RequiredArgumentKey} - Required argument key is not set or has incorrect type (for constructor)
+ * @prop {GetVal~IncorrectKey} - Incorrect key type for get/set methods
+ * @prop {GetVal~KeyIsNotExists} - Value not found by key
+ * @prop {GetVal~RequiredIsNotSet} - Attempt to get value before all required values sets
+ * @prop {GetVal~NoKeyInRequiredList} - Attempt to set required value by key that not in required list
+ * @static
+ * @readOnly
+ */
 @exceptions = @prototype.exceptions = {}
 
 @exceptions.IncorrectArgument = class extends Error

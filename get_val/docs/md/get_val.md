@@ -20,4 +20,5 @@ Provides class for getting value by key
 - \[required\] `Object.<*>` - Key-value object to set required values  
 
 **Scope**: inner class of [get_val](#module_get_val)  
+**Type**: `GetVal~IncorrectArgument`  
 **Returns**: `function` - "get" method wrapper (you can get value from example of class directly as by function)  

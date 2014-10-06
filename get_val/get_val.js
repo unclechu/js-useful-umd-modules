@@ -25,6 +25,9 @@
  * @param {!Object.<*>} values - Key-value object of values
  * @param {?Object.<*>} [required] - Key-value object to set required values
  * @returns {function} "get" method wrapper (you can get value from example of class directly as by function)
+ *
+ * @throws {GetVal~IncorrectArgument}
+ * @throws {GetVal~RequiredArgumentKey}
  */
 var GetVal;
 GetVal = (function(){
@@ -60,7 +63,7 @@ GetVal = (function(){
     /**
      * @private
      * @name GetVal~_required
-     * @type {Array}
+     * @type {Array.<string>}
      */
     this._required = values.required;
     if (required) {
@@ -74,6 +77,13 @@ GetVal = (function(){
         return self.get.apply(self, arguments);
       };
     }.call(this, this));
+    /**
+     * Link to class example for "get" method wrapper
+     *
+     * @public
+     * @name GetVal~super
+     * @type {GetVal}
+     */
     getWrapper['super'] = this;
     return getWrapper;
   }
@@ -82,6 +92,8 @@ GetVal = (function(){
    * @method
    * @name GetVal~_check-required
    * @static
+   *
+   * @throws {GetVal~RequiredIsNotSet}
    */
   prototype._checkRequired = function(){
     var i$, ref$, len$, i;
@@ -102,6 +114,9 @@ GetVal = (function(){
    * @static
    * @param {string} key - Key that in "required" list
    * @param {*} val - Value that can be got in the future by "key"
+   *
+   * @throws {GetVal~IncorrectKey}
+   * @throws {GetVal~NoKeyInRequiredList}
    */
   prototype.set = function(key, val){
     var found, i$, ref$, len$, i;
@@ -130,6 +145,10 @@ GetVal = (function(){
    * @param {string} key - Get value by this key
    * @param {boolean} ignoreRequired - Get value even if all required values is not setted yet
    * @returns {*} Value by key
+   *
+   * @throws {GetVal~RequiredIsNotSet}
+   * @throws {GetVal~IncorrectKey}
+   * @throws {GetVal~KeyIsNotExists}
    */
   prototype.get = function(key, ignoreRequired){
     if (!ignoreRequired) {
@@ -143,6 +162,21 @@ GetVal = (function(){
     }
     return this._values[key];
   };
+  /**
+   * Exceptions
+   *
+   * @public
+   * @name GetVal~exceptions
+   * @type {Object.<Error>}
+   * @prop {GetVal~IncorrectArgument} - Incorrect argument type for constructor
+   * @prop {GetVal~RequiredArgumentKey} - Required argument key is not set or has incorrect type (for constructor)
+   * @prop {GetVal~IncorrectKey} - Incorrect key type for get/set methods
+   * @prop {GetVal~KeyIsNotExists} - Value not found by key
+   * @prop {GetVal~RequiredIsNotSet} - Attempt to get value before all required values sets
+   * @prop {GetVal~NoKeyInRequiredList} - Attempt to set required value by key that not in required list
+   * @static
+   * @readOnly
+   */;
   GetVal.exceptions = GetVal.prototype.exceptions = {};
   GetVal.exceptions.IncorrectArgument = (function(superclass){
     var prototype = extend$((import$(IncorrectArgument, superclass).displayName = 'IncorrectArgument', IncorrectArgument), superclass).prototype, constructor = IncorrectArgument;
