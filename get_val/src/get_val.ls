@@ -1,10 +1,12 @@
 /**
  * Provides class for getting value by key
  *
+ * @module get_val
  * @version r9
  * @author Viacheslav Lotsmanov
- * @license AGPLv3 (https://github.com/unclechu/js-useful-umd-modules/blob/master/AGPLv3-LICENSE)
+ * @license AGPLv3
  * @see {@link https://github.com/unclechu/js-useful-umd-modules/|GitHub}
+ * @see {@link https://github.com/unclechu/js-useful-umd-modules/blob/master/AGPLv3-LICENSE|License}
  */
 
 /** @lends GetVal */
@@ -13,12 +15,12 @@
  * @class
  * @public
  * @name GetVal
- * @param {Object} values - Key-value object of values
- * @param {Object} [required] - Key-value object to set required values
- * @returns {function} getWrapper - You can get value from example of class directly as by function
+ * @param {!Object.<*>} values - Key-value object of values
+ * @param {?Object.<*>} [required] - Key-value object to set required values
+ * @returns {function} "get" method wrapper (you can get value from example of class directly as by function)
  */
 class GetVal
-	(values , required) ->
+	(values , required=null) ->
 
 		# arguments validation
 
@@ -41,12 +43,14 @@ class GetVal
 		/**
 		 * @private
 		 * @name GetVal~_values
+		 * @type {!Object.<*>}
 		 */
 		@_values = values.values
 
 		/**
 		 * @private
 		 * @name GetVal~_required
+		 * @type {Array}
 		 */
 		@_required = values.required
 
@@ -107,7 +111,7 @@ class GetVal
 	 * @static
 	 * @param {string} key - Get value by this key
 	 * @param {boolean} ignoreRequired - Get value even if all required values is not setted yet
-	 * @returns {*} value - Value by key
+	 * @returns {*} Value by key
 	 */
 	get: (key, ignore-required) ->
 		if not ignore-required then @_check-required!

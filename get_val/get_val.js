@@ -10,19 +10,21 @@
 /**
  * Provides class for getting value by key
  *
+ * @module get_val
  * @version r9
  * @author Viacheslav Lotsmanov
- * @license AGPLv3 (https://github.com/unclechu/js-useful-umd-modules/blob/master/AGPLv3-LICENSE)
+ * @license AGPLv3
  * @see {@link https://github.com/unclechu/js-useful-umd-modules/|GitHub}
+ * @see {@link https://github.com/unclechu/js-useful-umd-modules/blob/master/AGPLv3-LICENSE|License}
  */
 /** @lends GetVal */
 /**
  * @class
  * @public
  * @name GetVal
- * @param {Object} values - Key-value object of values
- * @param {Object} [required] - Key-value object to set required values
- * @returns {function} getWrapper - You can get value from example of class directly as by function
+ * @param {!Object.<*>} values - Key-value object of values
+ * @param {?Object.<*>} [required] - Key-value object to set required values
+ * @returns {function} "get" method wrapper (you can get value from example of class directly as by function)
  */
 var GetVal;
 GetVal = (function(){
@@ -30,6 +32,7 @@ GetVal = (function(){
   var prototype = GetVal.prototype, constructor = GetVal;
   function GetVal(values, required){
     var i$, len$, key, getWrapper;
+    required == null && (required = null);
     if (typeof values !== 'object') {
       throw new this.exceptions.IncorrectArgument(null, 'values', typeof values, 'object');
     }
@@ -45,11 +48,13 @@ GetVal = (function(){
     /**
      * @private
      * @name GetVal~_values
+     * @type {!Object.<*>}
      */
     this._values = values.values;
     /**
      * @private
      * @name GetVal~_required
+     * @type {Array}
      */
     this._required = values.required;
     if (required) {
@@ -118,7 +123,7 @@ GetVal = (function(){
    * @static
    * @param {string} key - Get value by this key
    * @param {boolean} ignoreRequired - Get value even if all required values is not setted yet
-   * @returns {*} value - Value by key
+   * @returns {*} Value by key
    */
   prototype.get = function(key, ignoreRequired){
     if (!ignoreRequired) {

@@ -24,12 +24,15 @@ build-list = pkg.buildList
 default-tasks = []
 clean-tasks = []
 build-tasks = []
+jsdoc-tasks = []
+clean-jsdoc-tasks = []
 
 build-cb = (name, pub-name, ugly=false) ->
 	gulp.src path.join name , \src , name + \.ls
+		# preprocessor uses html comments by default, need js comments
 		.pipe rename name + \.js
 		.pipe preprocess context: {}
-		.pipe rename name + \.ls
+		.pipe rename name + \.ls # rename back to .ls extension
 		.pipe ls bare: true
 		.pipe umd namespace: (file) -> pub-name
 		.pipe rename name + \.js
@@ -57,8 +60,23 @@ build-list.forEach (item) !->
 	build-tasks.push name
 	build-tasks.push name + \-min
 
+	gulp.task \clean-jsdoc- + name , ->
+		gulp.src path.join name , \doc , \jsdoc .pipe clean!
+	gulp.task \jsdoc- + name , [ \clean-jsdoc- + name , name ] , ->
+		dest = path.join name , \doc , \jsdoc
+		options =
+			showPrivate : true
+			outputSourceFiles : false
+		gulp.src path.join name , name + \.js
+			.pipe jsdoc dest , null , null , options
+
+	clean-jsdoc-tasks.push \clean-jsdoc- + name
+	jsdoc-tasks.push \jsdoc- + name
+
 gulp.task \clean clean-tasks
 gulp.task \build build-tasks
+gulp.task \clean-jsdoc clean-jsdoc-tasks
+gulp.task \jsdoc jsdoc-tasks
 
 default-tasks.push \build
 
