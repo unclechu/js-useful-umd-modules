@@ -56,7 +56,7 @@ class GetVal
 		/**
 		 * @private
 		 * @name GetVal~_required
-		 * @type {Array}
+		 * @type {Array.<string>}
 		 */
 		@_required = values.required
 
@@ -67,6 +67,13 @@ class GetVal
 		get-wrapper = let self = @
 			-> self.get.apply self , arguments
 
+		/**
+		 * Link to class example for "get" method wrapper
+		 *
+		 * @public
+		 * @name GetVal~super
+		 * @type {GetVal}
+		 */
 		get-wrapper.super = @
 
 		return get-wrapper
