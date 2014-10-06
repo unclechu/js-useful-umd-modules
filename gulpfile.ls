@@ -11,7 +11,7 @@ require! {
 	umd: \gulp-umd
 	gulpif: \gulp-if
 	jsdoc: \gulp-jsdoc
-	jsdoc2md: \jsdoc-to-markdown
+	jsdoc2md: \gulp-jsdoc-to-markdown
 	preprocess: \gulp-preprocess
 
 	pkg: \./package.json
@@ -24,8 +24,13 @@ build-list = pkg.buildList
 default-tasks = []
 clean-tasks = []
 build-tasks = []
-jsdoc-tasks = []
+
 clean-jsdoc-tasks = []
+jsdoc-tasks = []
+clean-jsdoc2md-tasks = []
+jsdoc2md-tasks = []
+clean-docs-tasks = []
+docs-tasks = []
 
 build-cb = (name, pub-name, ugly=false) ->
 	gulp.src path.join name , \src , name + \.ls
@@ -44,10 +49,12 @@ build-list.forEach (item) !->
 	name = item.fileName
 	pub-name = item.pubName
 
+	# build livescript to javascript (also minificated)
+
 	gulp.task \clean- + name , ->
-		gulp.src path.join name , name + \.js .pipe clean!
+		gulp.src ( path.join name , name + \.js ) .pipe clean!
 	gulp.task \clean- + name + \-min , ->
-		gulp.src path.join name , name + \-min.js .pipe clean!
+		gulp.src ( path.join name , name + \-min.js ) .pipe clean!
 
 	clean-tasks.push \clean- + name
 	clean-tasks.push \clean- + name + \-min
@@ -60,23 +67,61 @@ build-list.forEach (item) !->
 	build-tasks.push name
 	build-tasks.push name + \-min
 
-	gulp.task \clean-jsdoc- + name , ->
-		gulp.src path.join name , \doc , \jsdoc .pipe clean!
-	gulp.task \jsdoc- + name , [ \clean-jsdoc- + name , name ] , ->
-		dest = path.join name , \doc , \jsdoc
+	# html docs
+
+	gulp.task \clean-docs-html- + name , ->
+		gulp.src ( path.join name , \docs , \html ) .pipe clean!
+	gulp.task \docs-html- + name , [ \clean-docs-html- + name , name ] , ->
+		dest = path.join name , \docs , \html
 		options =
 			showPrivate : true
 			outputSourceFiles : false
 		gulp.src path.join name , name + \.js
 			.pipe jsdoc dest , null , null , options
 
-	clean-jsdoc-tasks.push \clean-jsdoc- + name
-	jsdoc-tasks.push \jsdoc- + name
+	clean-jsdoc-tasks.push \clean-docs-html- + name
+	jsdoc-tasks.push \docs-html- + name
+
+	# md docs
+
+	gulp.task \clean-docs-md- + name , ->
+		gulp.src ( path.join name , \docs , \md ) .pipe clean!
+	gulp.task \docs-md- + name , ->
+		dest = path.join name , \docs , \md
+		gulp.src path.join name , name + \.js
+			.pipe jsdoc2md!
+			.pipe rename (path) !->
+				path.extname = \.md
+			.pipe gulp.dest dest
+
+	clean-jsdoc-tasks.push \clean-docs-html- + name
+	jsdoc-tasks.push \docs-html- + name
+
+	# both docs
+
+	gulp.task \clean-docs- + name , [
+		\clean-docs-html- + name
+		\clean-docs-md- + name
+	]
+	gulp.task \docs- + name , [
+		\clean-docs- + name
+		\docs-html- + name
+		\docs-md- + name
+	]
+
+	clean-docs-tasks.push \clean-docs- + name
+	docs-tasks.push \docs- + name
 
 gulp.task \clean clean-tasks
 gulp.task \build build-tasks
-gulp.task \clean-jsdoc clean-jsdoc-tasks
-gulp.task \jsdoc jsdoc-tasks
+
+# docs
+gulp.task \clean-docs-html clean-jsdoc-tasks
+gulp.task \docs-html jsdoc-tasks
+gulp.task \clean-docs-md clean-jsdoc2md-tasks
+gulp.task \docs-md jsdoc2md-tasks
+gulp.task \clean-docs clean-docs-tasks
+gulp.task \docs docs-tasks
 
 default-tasks.push \build
 
