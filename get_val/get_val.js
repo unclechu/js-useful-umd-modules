@@ -179,25 +179,25 @@ GetVal = (function(){
   GetVal.exceptions = GetVal.prototype.exceptions = {};
   GetVal.exceptions.IncorrectArgument = (function(superclass){
     var prototype = extend$((import$(IncorrectArgument, superclass).displayName = 'IncorrectArgument', IncorrectArgument), superclass).prototype, constructor = IncorrectArgument;
-    function IncorrectArgument(message, name, type, mustBe){
+    function IncorrectArgument(message, argName, argType, mustBe){
       if (message) {
         this.message = message;
       } else {
         this.message = 'Incorrect';
-        if (name) {
-          this.message += " \"" + name + "\"";
+        if (argName) {
+          this.message += " \"" + argName + "\"";
         }
         this.message += ' argument type';
-        if (type) {
-          this.message += ": \"" + type + "\"";
+        if (argType) {
+          this.message += ": \"" + argType + "\"";
         }
         if (mustBe) {
           this.message += ", must be a(n) \"" + mustBe + "\"";
         }
         this.message += '.';
       }
-      this.name = name;
-      this.type = type;
+      this.argName = argName;
+      this.argType = argType;
       this.mustBe = mustBe;
     }
     return IncorrectArgument;

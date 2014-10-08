@@ -16,18 +16,18 @@
 @exceptions = @prototype.exceptions = {}
 
 @exceptions.IncorrectArgument = class extends Error
-	(message, name, type, must-be) !->
+	(message, arg-name, arg-type, must-be) !->
 		if message
 			@message = message
 		else
 			@message = \Incorrect
-			if name then @message += " \"#{name}\""
+			if arg-name then @message += " \"#{arg-name}\""
 			@message += ' argument type'
-			if type then @message += ": \"#{type}\""
+			if arg-type then @message += ": \"#{arg-type}\""
 			if must-be then @message += ", must be a(n) \"#{must-be}\""
 			@message += \.
-		@name = name
-		@type = type
+		@argName = arg-name
+		@argType = arg-type
 		@mustBe = must-be
 
 @exceptions.RequiredArgumentKey = class extends Error
