@@ -101,8 +101,8 @@ build-list.forEach (item) !->
 					path.extname = \.md
 				.pipe gulp.dest dest
 
-		clean-jsdoc-tasks.push \clean-docs-html- + name
-		jsdoc-tasks.push \docs-html- + name
+		clean-jsdoc2md-tasks.push \clean-docs-md- + name
+		jsdoc2md-tasks.push \docs-md- + name
 
 		# both docs
 
