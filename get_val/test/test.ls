@@ -64,7 +64,7 @@ describe \GetVal , !->
 		e.should.instanceOf exceptions.KeyIsNotExists
 
 	specify '
-	Get value before all required values is setted' +
+	Attempt to get value before all required values is setted' +
 	' throws exception' , !->
 		get-val = new GetVal values: { foo: 1, bar: 2 } , required: [ \check ]
 		try
@@ -92,6 +92,12 @@ describe \GetVal , !->
 			void
 		e.should.instanceOf exceptions.RequiredIsNotSet
 
+	specify '
+	Get value before all required values is setted' +
+	' using special flag' , !->
+		get-val = new GetVal values: { foo: 1, bar: 2 } , required: [ \check ]
+		get-val \foo , true .should.eql 1
+
 	specify 'Set required values' , !->
 		get-val = new GetVal values: { foo: 1, bar: 2 } , required: [ \a , \b ]
 		get-val.super.set \a , 1
@@ -113,7 +119,7 @@ describe \GetVal , !->
 
 	specify '
 	Attempt to set required value' +
-	'that not in required list throw exception' , !->
+	' that not in required list throw exception' , !->
 		get-val = new GetVal values: { foo: 1, bar: 2 } , required: [ \a , \b ]
 		try
 			get-val.super.set \check , 1

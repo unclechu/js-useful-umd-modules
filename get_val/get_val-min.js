@@ -2,7 +2,7 @@
  * Provides class for getting value by key
  *
  * @module get_val
- * @version r9
+ * @version r10
  * @author Viacheslav Lotsmanov
  * @license AGPLv3
  * @see {@link https://github.com/unclechu/js-useful-umd-modules/|GitHub}

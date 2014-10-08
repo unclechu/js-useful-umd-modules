@@ -2,7 +2,7 @@
 #get_val
 Provides class for getting value by key
 
-**Version**: r9  
+**Version**: r10  
 **Author**: Viacheslav Lotsmanov  
 **License**: AGPLv3  
 <a name="module_get_val..GetVal"></a>

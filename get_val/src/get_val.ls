@@ -2,7 +2,7 @@
  * Provides class for getting value by key
  *
  * @module get_val
- * @version r9
+ * @version r10
  * @author Viacheslav Lotsmanov
  * @license AGPLv3
  * @see {@link https://github.com/unclechu/js-useful-umd-modules/|GitHub}
@@ -34,7 +34,7 @@ class GetVal
 		# arguments validation
 
 		is-array = (arg) ->
-			return Object.prototype.toString.call(arg) is '[object Array]'
+			Object.prototype.toString.call(arg) is '[object Array]'
 
 		# "values" arg
 		if typeof values is not \object
