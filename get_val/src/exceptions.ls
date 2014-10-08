@@ -17,6 +17,7 @@
 
 @exceptions.IncorrectArgument = class extends Error
 	(message, arg-name, arg-type, must-be) !->
+		@name = \IncorrectArgument
 		if message
 			@message = message
 		else
@@ -32,6 +33,7 @@
 
 @exceptions.RequiredArgumentKey = class extends Error
 	(message, arg-name, key-name, key-type, key-must-be) !->
+		@name = \RequiredArgumentKey
 		if message
 			@message = message
 		else
@@ -50,6 +52,7 @@
 
 @exceptions.IncorrectKey = class extends Error
 	(message, key-type) !->
+		@name = \IncorrectKey
 		if message
 			@message = message
 		else
@@ -60,6 +63,7 @@
 
 @exceptions.KeyIsNotExists = class extends Error
 	(message, key) !->
+		@name = \KeyIsNotExists
 		if message
 			@message = message
 		else
@@ -70,6 +74,7 @@
 
 @exceptions.RequiredIsNotSet = class extends Error
 	(message, key) !->
+		@name = \RequiredIsNotSet
 		if message
 			@message = message
 		else
@@ -80,6 +85,7 @@
 
 @exceptions.NoKeyInRequiredList = class extends Error
 	(message, key) !->
+		@name = \NoKeyInRequiredList
 		if message
 			@message = message
 		else

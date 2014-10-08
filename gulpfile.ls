@@ -10,8 +10,6 @@ require! {
 	uglify: \gulp-uglify
 	umd: \gulp-umd
 	gulpif: \gulp-if
-	jsdoc: \gulp-jsdoc
-	jsdoc2md: \gulp-jsdoc-to-markdown
 	preprocess: \gulp-preprocess
 
 	pkg: \./package.json
@@ -25,12 +23,15 @@ default-tasks = []
 clean-tasks = []
 build-tasks = []
 
+# docs tasks
 clean-jsdoc-tasks = []
 jsdoc-tasks = []
 clean-jsdoc2md-tasks = []
 jsdoc2md-tasks = []
 clean-docs-tasks = []
 docs-tasks = []
+
+test-tasks = []
 
 build-cb = (name, pub-name, ugly=false) ->
 	gulp.src path.join name , \src , name + \.ls
@@ -52,9 +53,9 @@ build-list.forEach (item) !->
 	# build livescript to javascript (also minificated)
 
 	gulp.task \clean- + name , ->
-		gulp.src ( path.join name , name + \.js ) .pipe clean!
+		gulp.src( path.join name , name + \.js ) .pipe clean!
 	gulp.task \clean- + name + \-min , ->
-		gulp.src ( path.join name , name + \-min.js ) .pipe clean!
+		gulp.src( path.join name , name + \-min.js ) .pipe clean!
 
 	clean-tasks.push \clean- + name
 	clean-tasks.push \clean- + name + \-min
@@ -67,50 +68,63 @@ build-list.forEach (item) !->
 	build-tasks.push name
 	build-tasks.push name + \-min
 
-	# html docs
+	if item.docs
 
-	gulp.task \clean-docs-html- + name , ->
-		gulp.src ( path.join name , \docs , \html ) .pipe clean!
-	gulp.task \docs-html- + name , [ \clean-docs-html- + name , name ] , ->
-		dest = path.join name , \docs , \html
-		options =
-			showPrivate : true
-			outputSourceFiles : false
-		gulp.src path.join name , name + \.js
-			.pipe jsdoc dest , null , null , options
+		# html docs
 
-	clean-jsdoc-tasks.push \clean-docs-html- + name
-	jsdoc-tasks.push \docs-html- + name
+		gulp.task \clean-docs-html- + name , ->
+			gulp.src( path.join name , \docs , \html ) .pipe clean!
+		gulp.task \docs-html- + name , [ \clean-docs-html- + name , name ] , ->
+			jsdoc = require \gulp-jsdoc
+			dest = path.join name , \docs , \html
+			options =
+				showPrivate : true
+				outputSourceFiles : false
+			template =
+				footer: ''
+			gulp.src path.join name , name + \.js
+				.pipe jsdoc dest , template , null , options
 
-	# md docs
+		clean-jsdoc-tasks.push \clean-docs-html- + name
+		jsdoc-tasks.push \docs-html- + name
 
-	gulp.task \clean-docs-md- + name , ->
-		gulp.src ( path.join name , \docs , \md ) .pipe clean!
-	gulp.task \docs-md- + name , ->
-		dest = path.join name , \docs , \md
-		gulp.src path.join name , name + \.js
-			.pipe jsdoc2md!
-			.pipe rename (path) !->
-				path.extname = \.md
-			.pipe gulp.dest dest
+		# md docs
 
-	clean-jsdoc-tasks.push \clean-docs-html- + name
-	jsdoc-tasks.push \docs-html- + name
+		gulp.task \clean-docs-md- + name , ->
+			gulp.src( path.join name , \docs , \md ) .pipe clean!
+		gulp.task \docs-md- + name , ->
+			jsdoc2md = require \gulp-jsdoc-to-markdown
+			dest = path.join name , \docs , \md
+			gulp.src path.join name , name + \.js
+				.pipe jsdoc2md \private : true
+				.pipe rename (path) !->
+					path.extname = \.md
+				.pipe gulp.dest dest
 
-	# both docs
+		clean-jsdoc-tasks.push \clean-docs-html- + name
+		jsdoc-tasks.push \docs-html- + name
 
-	gulp.task \clean-docs- + name , [
-		\clean-docs-html- + name
-		\clean-docs-md- + name
-	]
-	gulp.task \docs- + name , [
-		\clean-docs- + name
-		\docs-html- + name
-		\docs-md- + name
-	]
+		# both docs
 
-	clean-docs-tasks.push \clean-docs- + name
-	docs-tasks.push \docs- + name
+		gulp.task \clean-docs- + name , [
+			\clean-docs-html- + name
+			\clean-docs-md- + name
+		]
+		gulp.task \docs- + name , [
+			\clean-docs- + name
+			\docs-html- + name
+			\docs-md- + name
+		]
+
+		clean-docs-tasks.push \clean-docs- + name
+		docs-tasks.push \docs- + name
+
+	if item.test
+		gulp.task \test- + name , [name] , ->
+			mocha = require \gulp-mocha
+			gulp.src path.join( name , \test , \test.ls ) , read : false
+				.pipe mocha!
+		test-tasks.push \test- + name
 
 gulp.task \clean clean-tasks
 gulp.task \build build-tasks
@@ -122,6 +136,8 @@ gulp.task \clean-docs-md clean-jsdoc2md-tasks
 gulp.task \docs-md jsdoc2md-tasks
 gulp.task \clean-docs clean-docs-tasks
 gulp.task \docs docs-tasks
+
+gulp.task \test test-tasks
 
 default-tasks.push \build
 

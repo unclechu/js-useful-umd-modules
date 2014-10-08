@@ -180,6 +180,7 @@ GetVal = (function(){
   GetVal.exceptions.IncorrectArgument = (function(superclass){
     var prototype = extend$((import$(IncorrectArgument, superclass).displayName = 'IncorrectArgument', IncorrectArgument), superclass).prototype, constructor = IncorrectArgument;
     function IncorrectArgument(message, argName, argType, mustBe){
+      this.name = 'IncorrectArgument';
       if (message) {
         this.message = message;
       } else {
@@ -205,6 +206,7 @@ GetVal = (function(){
   GetVal.exceptions.RequiredArgumentKey = (function(superclass){
     var prototype = extend$((import$(RequiredArgumentKey, superclass).displayName = 'RequiredArgumentKey', RequiredArgumentKey), superclass).prototype, constructor = RequiredArgumentKey;
     function RequiredArgumentKey(message, argName, keyName, keyType, keyMustBe){
+      this.name = 'RequiredArgumentKey';
       if (message) {
         this.message = message;
       } else {
@@ -235,6 +237,7 @@ GetVal = (function(){
   GetVal.exceptions.IncorrectKey = (function(superclass){
     var prototype = extend$((import$(IncorrectKey, superclass).displayName = 'IncorrectKey', IncorrectKey), superclass).prototype, constructor = IncorrectKey;
     function IncorrectKey(message, keyType){
+      this.name = 'IncorrectKey';
       if (message) {
         this.message = message;
       } else {
@@ -251,6 +254,7 @@ GetVal = (function(){
   GetVal.exceptions.KeyIsNotExists = (function(superclass){
     var prototype = extend$((import$(KeyIsNotExists, superclass).displayName = 'KeyIsNotExists', KeyIsNotExists), superclass).prototype, constructor = KeyIsNotExists;
     function KeyIsNotExists(message, key){
+      this.name = 'KeyIsNotExists';
       if (message) {
         this.message = message;
       } else {
@@ -267,6 +271,7 @@ GetVal = (function(){
   GetVal.exceptions.RequiredIsNotSet = (function(superclass){
     var prototype = extend$((import$(RequiredIsNotSet, superclass).displayName = 'RequiredIsNotSet', RequiredIsNotSet), superclass).prototype, constructor = RequiredIsNotSet;
     function RequiredIsNotSet(message, key){
+      this.name = 'RequiredIsNotSet';
       if (message) {
         this.message = message;
       } else {
@@ -283,6 +288,7 @@ GetVal = (function(){
   GetVal.exceptions.NoKeyInRequiredList = (function(superclass){
     var prototype = extend$((import$(NoKeyInRequiredList, superclass).displayName = 'NoKeyInRequiredList', NoKeyInRequiredList), superclass).prototype, constructor = NoKeyInRequiredList;
     function NoKeyInRequiredList(message, key){
+      this.name = 'NoKeyInRequiredList';
       if (message) {
         this.message = message;
       } else {
