@@ -64,7 +64,7 @@ class GetVal
 		@_required = values.required
 
 		if required
-			for key in required
+			for key of required
 				@set.call @ , key , required[key]
 
 		get-wrapper = let self = @
@@ -90,9 +90,9 @@ class GetVal
 	 * @throws {GetVal~RequiredIsNotSet}
 	 */
 	_check-required: !->
-		for i in @_required
-			if @_required[i] not in @_values
-				throw new @exceptions.RequiredIsNotSet null , @_required
+		for item in @_required
+			if item not of @_values
+				throw new @exceptions.RequiredIsNotSet null , item
 
 	/**
 	 * Set value by key
@@ -114,8 +114,8 @@ class GetVal
 		if typeof key is not \string
 			throw new @exceptions.IncorrectKey null , typeof key
 
-		for i in @_required
-			if @_required[i] is key
+		for item in @_required
+			if item is key
 				found = true
 
 		if not found
@@ -144,7 +144,7 @@ class GetVal
 		if typeof key is not \string
 			throw new @exceptions.IncorrectKey null , typeof key
 
-		if key not in @_values
+		if key not of @_values
 			throw new @exceptions.KeyIsNotExists null , key
 
 		return @_values[key]

@@ -34,7 +34,7 @@ GetVal = (function(){
   GetVal.displayName = 'GetVal';
   var prototype = GetVal.prototype, constructor = GetVal;
   function GetVal(values, required){
-    var isArray, i$, len$, key, getWrapper;
+    var isArray, key, getWrapper;
     required == null && (required = null);
     isArray = function(arg){
       return Object.prototype.toString.call(arg) === '[object Array]';
@@ -67,8 +67,7 @@ GetVal = (function(){
      */
     this._required = values.required;
     if (required) {
-      for (i$ = 0, len$ = required.length; i$ < len$; ++i$) {
-        key = required[i$];
+      for (key in required) {
         this.set.call(this, key, required[key]);
       }
     }
@@ -96,11 +95,11 @@ GetVal = (function(){
    * @throws {GetVal~RequiredIsNotSet}
    */
   prototype._checkRequired = function(){
-    var i$, ref$, len$, i;
+    var i$, ref$, len$, item;
     for (i$ = 0, len$ = (ref$ = this._required).length; i$ < len$; ++i$) {
-      i = ref$[i$];
-      if (!in$(this._required[i], this._values)) {
-        throw new this.exceptions.RequiredIsNotSet(null, this._required);
+      item = ref$[i$];
+      if (!(item in this._values)) {
+        throw new this.exceptions.RequiredIsNotSet(null, item);
       }
     }
   };
@@ -119,14 +118,14 @@ GetVal = (function(){
    * @throws {GetVal~NoKeyInRequiredList}
    */
   prototype.set = function(key, val){
-    var found, i$, ref$, len$, i;
+    var found, i$, ref$, len$, item;
     found = false;
     if (typeof key !== 'string') {
       throw new this.exceptions.IncorrectKey(null, typeof key);
     }
     for (i$ = 0, len$ = (ref$ = this._required).length; i$ < len$; ++i$) {
-      i = ref$[i$];
-      if (this._required[i] === key) {
+      item = ref$[i$];
+      if (item === key) {
         found = true;
       }
     }
@@ -157,7 +156,7 @@ GetVal = (function(){
     if (typeof key !== 'string') {
       throw new this.exceptions.IncorrectKey(null, typeof key);
     }
-    if (!in$(key, this._values)) {
+    if (!(key in this._values)) {
       throw new this.exceptions.KeyIsNotExists(null, key);
     }
     return this._values[key];
@@ -300,11 +299,6 @@ GetVal = (function(){
   return GetVal;
 }());
 return GetVal;
-function in$(x, xs){
-  var i = -1, l = xs.length >>> 0;
-  while (++i < l) if (x === xs[i]) return true;
-  return false;
-}
 function extend$(sub, sup){
   function fun(){} fun.prototype = (sub.superclass = sup).prototype;
   (sub.prototype = new fun).constructor = sub;
