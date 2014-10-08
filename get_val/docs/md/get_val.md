@@ -16,8 +16,8 @@ Provides class for getting value by key
 ###new get_val~GetVal(values, [required])
 **Params**
 
-- values `Object.<*>` - Key-value object of values  
-- \[required\] `Object.<*>` - Key-value object to set required values  
+- values <code>[valuesArg](#GetVal..valuesArg)</code> - Key-value object of values  
+- \[required\] `Object.<*>` - Key-value object to set required values at instance creating  
 
 **Scope**: inner class of [get_val](#module_get_val)  
 **Type**: `GetVal~IncorrectArgument`  

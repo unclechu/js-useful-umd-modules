@@ -12,11 +12,17 @@
 /** @lends GetVal */
 
 /**
+ * @typedef {!Object.<Object|Array>} GetVal~valuesArg
+ * @prop {!Object.<*>} values - Values key-val object
+ * @prop {?Array.<string>} [required] - Array of required keys
+ */
+
+/**
  * @class
  * @public
  * @name GetVal
- * @param {!Object.<*>} values - Key-value object of values
- * @param {?Object.<*>} [required] - Key-value object to set required values
+ * @param {GetVal~valuesArg} values - Key-value object of values
+ * @param {?Object.<*>} [required] - Key-value object to set required values at instance creating
  * @returns {function} "get" method wrapper (you can get value from example of class directly as by function)
  *
  * @throws {GetVal~IncorrectArgument}
@@ -40,7 +46,7 @@ class GetVal
 		if is-array values.values
 			throw new @exceptions.RequiredArgumentKey null ,
 				\values , \values , \array , \object
-		if not is-array values.required
+		if values.required and not is-array values.required
 			throw new @exceptions.RequiredArgumentKey null,
 				\values , \required , typeof values.required , \array
 
@@ -61,7 +67,7 @@ class GetVal
 		 * @name GetVal~_required
 		 * @type {Array.<string>}
 		 */
-		@_required = values.required
+		@_required = values.required or []
 
 		if required
 			for key of required

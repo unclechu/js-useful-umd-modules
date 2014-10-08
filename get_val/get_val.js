@@ -19,11 +19,16 @@
  */
 /** @lends GetVal */
 /**
+ * @typedef {!Object.<Object|Array>} GetVal~valuesArg
+ * @prop {!Object.<*>} values - Values key-val object
+ * @prop {?Array.<string>} [required] - Array of required keys
+ */
+/**
  * @class
  * @public
  * @name GetVal
- * @param {!Object.<*>} values - Key-value object of values
- * @param {?Object.<*>} [required] - Key-value object to set required values
+ * @param {GetVal~valuesArg} values - Key-value object of values
+ * @param {?Object.<*>} [required] - Key-value object to set required values at instance creating
  * @returns {function} "get" method wrapper (you can get value from example of class directly as by function)
  *
  * @throws {GetVal~IncorrectArgument}
@@ -48,7 +53,7 @@ GetVal = (function(){
     if (isArray(values.values)) {
       throw new this.exceptions.RequiredArgumentKey(null, 'values', 'values', 'array', 'object');
     }
-    if (!isArray(values.required)) {
+    if (values.required && !isArray(values.required)) {
       throw new this.exceptions.RequiredArgumentKey(null, 'values', 'required', typeof values.required, 'array');
     }
     if (required && typeof required !== 'object') {
@@ -65,7 +70,7 @@ GetVal = (function(){
      * @name GetVal~_required
      * @type {Array.<string>}
      */
-    this._required = values.required;
+    this._required = values.required || [];
     if (required) {
       for (key in required) {
         this.set.call(this, key, required[key]);

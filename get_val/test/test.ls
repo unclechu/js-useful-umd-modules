@@ -63,10 +63,31 @@ describe \GetVal , !->
 			void
 		e.should.instanceOf exceptions.KeyIsNotExists
 
-	specify 'Try to get value before all required values is setted' , !->
+	specify '
+	Get value before all required values is setted' +
+	' throws exception' , !->
 		get-val = new GetVal values: { foo: 1, bar: 2 } , required: [ \check ]
 		try
 			get-val \foo
+		catch
+			void
+		e.should.instanceOf exceptions.RequiredIsNotSet
+
+		# also for required sets at instance creating
+		values =
+			values:
+				foo: 1
+				bar: 2
+			required:
+				\a
+				\b
+				\c
+		required-set =
+			a: 1
+			b: 2
+		get-val2 = new GetVal values , required-set
+		try
+			get-val2 \foo
 		catch
 			void
 		e.should.instanceOf exceptions.RequiredIsNotSet
@@ -91,14 +112,37 @@ describe \GetVal , !->
 		bar.should.eql 2
 
 	specify '
-	Attempt to set required value
-	that not in required list throw exception' , !->
+	Attempt to set required value' +
+	'that not in required list throw exception' , !->
 		get-val = new GetVal values: { foo: 1, bar: 2 } , required: [ \a , \b ]
 		try
 			get-val.super.set \check , 1
 		catch
 			void
 		e.should.instanceOf exceptions.NoKeyInRequiredList
+
+	specify '
+	Set required values at instance creating (as second argument)' , !->
+		values =
+			values:
+				foo: 1
+				bar: 2
+			required:
+				\a
+				\b
+		required-set =
+			a: 1
+			b: 2
+		get-val = new GetVal values , required-set
+		get-val \foo .should.eql 1
+		get-val \bar .should.eql 2
+		get-val \a .should.eql 1
+		get-val \b .should.eql 2
+
+	specify 'Required list is optional for create instance' , !->
+		get-val = new GetVal values: { foo: 1, bar: 2 }
+		get-val \foo
+		get-val \bar
 
 	# exceptions
 
