@@ -92,7 +92,7 @@ build-list.forEach (item) !->
 
 		gulp.task \clean-docs-md- + name , ->
 			gulp.src( path.join name , \docs , \md ) .pipe clean!
-		gulp.task \docs-md- + name , ->
+		gulp.task \docs-md- + name , [ \clean-docs-md- + name , name ] ->
 			jsdoc2md = require \gulp-jsdoc-to-markdown
 			dest = path.join name , \docs , \md
 			gulp.src path.join name , name + \.js
