@@ -150,6 +150,22 @@ describe \GetVal , !->
 		get-val \foo
 		get-val \bar
 
+	specify '
+	"get" method wrapper has "set" method wrapper' , !->
+		values =
+			values: { a : 1 b : 2 }
+			required: [ \c ]
+		get-val = new GetVal values
+		try
+			get-val \a
+		catch
+			void
+		e.should.instanceOf exceptions.RequiredIsNotSet
+
+		get-val.set.should.instanceOf Function
+		get-val.set \c 3
+		get-val \c .should.eql 3
+
 	# exceptions
 
 	specify 'Exceptions is instance of Error' , !->

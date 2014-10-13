@@ -2,9 +2,9 @@
  * Provides class for getting value by key
  *
  * @module get_val
- * @version r10
+ * @version r11
  * @author Viacheslav Lotsmanov
- * @license AGPLv3
+ * @license GNU/AGPLv3
  * @see {@link https://github.com/unclechu/js-useful-umd-modules/|GitHub}
  * @see {@link https://github.com/unclechu/js-useful-umd-modules/blob/master/AGPLv3-LICENSE|License}
  */
@@ -75,6 +75,10 @@ class GetVal
 
 		get-wrapper = let self = @
 			-> self.get.apply self , arguments
+
+		# additional wrapper for "set" method
+		get-wrapper.set = let self = @
+			-> self.set.apply self , arguments
 
 		/**
 		 * Link to class example for "get" method wrapper
