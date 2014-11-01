@@ -3,17 +3,17 @@ require! {
 
 	gulp
 
-	clean: \gulp-clean
-	tasks: \gulp-task-listing
-	rename: \gulp-rename
-	ls: \gulp-livescript
-	uglify: \gulp-uglify
-	umd: \gulp-umd
-	gulpif: \gulp-if
-	preprocess: \gulp-preprocess
-
-	pkg: \./package.json
+	\gulp-clean : clean
+	\gulp-task-listing : tasks
+	\gulp-rename : rename
+	\gulp-livescript : ls
+	\gulp-uglify : uglify
+	\gulp-umd : umd
+	\gulp-if : gulpif
+	\gulp-preprocess : preprocess
 }
+
+pkg = require path.join process.cwd() , './package.json'
 
 gulp.task \help tasks
 
