@@ -8,7 +8,7 @@ require! {
 	\gulp-rename : rename
 	\gulp-livescript : ls
 	\gulp-uglify : uglify
-	\gulp-umd : umd
+	'./gulp-umd' : umd
 	\gulp-if : gulpif
 	\gulp-preprocess : preprocess
 }
@@ -40,7 +40,10 @@ build-cb = (name, pub-name, ugly=false) ->
 		.pipe preprocess context: {}
 		.pipe rename name + \.ls # rename back to .ls extension
 		.pipe ls bare: true
-		.pipe umd namespace: (file) -> pub-name
+		.pipe umd {
+			namespace: (file) -> pub-name
+			defaultIndentValue: '  '
+		}
 		.pipe rename name + \.js
 		.pipe gulpif ugly , uglify preserveComments: 'some'
 		.pipe gulpif ugly , rename name + \-min.js

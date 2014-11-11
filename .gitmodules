@@ -1,0 +1,3 @@
+[submodule "gulp-umd"]
+	path = gulp-umd
+	url = https://github.com/unclechu/gulp-umd
