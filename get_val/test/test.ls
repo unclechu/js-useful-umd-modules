@@ -1,9 +1,10 @@
 require! {
 	should
-	GetVal: '../get_val.js'
+	'../get_val.js': GetValJS
+	'../get_val.ls': GetValLS
 }
 
-describe \GetVal , !->
+handlerGetVal = (GetVal) !->
 
 	exceptions = GetVal.exceptions
 
@@ -197,3 +198,6 @@ describe \GetVal , !->
 			if real-name is not name
 				throw new Error "Names doesn't match " +
 					"(real name is: \"#{real-name}\", but must be \"#{name}\")."
+
+describe \GetValJS , !-> handlerGetVal.call this , GetValJS
+describe \GetValLS , !-> handlerGetVal.call this , GetValLS

@@ -33,20 +33,27 @@ docs-tasks = []
 
 test-tasks = []
 
-build-cb = (name, pub-name, ugly=false) ->
+build-cb = (name, pub-name, mode=null) ->
 	gulp.src path.join name , \src , name + \.ls
 		# preprocessor uses html comments by default, need js comments
 		.pipe rename name + \.js
 		.pipe preprocess context: {}
 		.pipe rename name + \.ls # rename back to .ls extension
-		.pipe ls bare: true
-		.pipe umd {
+		.pipe gulpif mode is not \ls , ls bare: true
+		.pipe gulpif mode is not \ls , umd {
 			namespace: (file) -> pub-name
 			defaultIndentValue: '  '
 		}
 		.pipe rename name + \.js
-		.pipe gulpif ugly , uglify preserveComments: 'some'
-		.pipe gulpif ugly , rename name + \-min.js
+		.pipe gulpif mode is \ugly , uglify preserveComments: 'some'
+		.pipe gulpif mode is \ugly , rename name + \-min.js
+		.pipe gulpif mode is \ls , umd {
+			namespace: (file) -> pub-name
+			defaultIndentValue: '  '
+			template: path.join \_dev , \umd_template_1.3.ls
+			indent: '\t'
+		}
+		.pipe gulpif mode is \ls , rename name + \.ls
 		.pipe gulp.dest name
 
 build-list.forEach (item) !->
@@ -56,20 +63,26 @@ build-list.forEach (item) !->
 	# build livescript to javascript (also minificated)
 
 	gulp.task \clean- + name , (cb) ->
+		del path.join( name , name + \.ls ) , cb
+	gulp.task \clean- + name + \-js , (cb) ->
 		del path.join( name , name + \.js ) , cb
-	gulp.task \clean- + name + \-min , (cb) ->
+	gulp.task \clean- + name + \-js-min , (cb) ->
 		del path.join( name , name + \-min.js ) , cb
 
 	clean-tasks.push \clean- + name
-	clean-tasks.push \clean- + name + \-min
+	clean-tasks.push \clean- + name + \-js
+	clean-tasks.push \clean- + name + \-js-min
 
-	gulp.task name , [ \clean- + name ] , ->
+	gulp.task name, [ \clean- + name ] , ->
+		build-cb name , pub-name , \ls
+	gulp.task name + \-js, [ \clean- + name + \-js ] , ->
 		build-cb name , pub-name
-	gulp.task name + \-min , [ \clean- + name + \-min ] , ->
-		build-cb name , pub-name , true
+	gulp.task name + \-js-min , [ \clean- + name + \-js-min ] , ->
+		build-cb name , pub-name , \ugly
 
 	build-tasks.push name
-	build-tasks.push name + \-min
+	build-tasks.push name + \-js
+	build-tasks.push name + \-js-min
 
 	if item.docs
 
@@ -77,7 +90,10 @@ build-list.forEach (item) !->
 
 		gulp.task \clean-docs-html- + name , (cb) ->
 			del path.join( name , \docs , \html ) , cb
-		gulp.task \docs-html- + name , [ \clean-docs-html- + name , name ] , ->
+		gulp.task \docs-html- + name , [
+			\clean-docs-html- + name
+			name + \-js
+		] , ->
 			jsdoc = require \gulp-jsdoc
 			dest = path.join name , \docs , \html
 			options =
@@ -95,7 +111,10 @@ build-list.forEach (item) !->
 
 		gulp.task \clean-docs-md- + name , (cb) ->
 			del path.join( name , \docs , \md ) , cb
-		gulp.task \docs-md- + name , [ \clean-docs-md- + name , name ] ->
+		gulp.task \docs-md- + name , [
+			\clean-docs-md- + name
+			name + \-js
+		] , ->
 			jsdoc2md = require \gulp-jsdoc-to-markdown
 			dest = path.join name , \docs , \md
 			gulp.src path.join name , name + \.js
@@ -123,7 +142,7 @@ build-list.forEach (item) !->
 		docs-tasks.push \docs- + name
 
 	if item.test
-		gulp.task \test- + name , [name] , ->
+		gulp.task \test- + name , [ name , name + \-js ] , ->
 			mocha = require \gulp-mocha
 			gulp.src path.join( name , \test , \test.ls ) , read : false
 				.pipe mocha!
