@@ -49,7 +49,6 @@ build-cb = (name, pub-name, mode=null) ->
 		.pipe gulpif mode is \ugly , rename name + \-min.js
 		.pipe gulpif mode is \ls , umd {
 			namespace: (file) -> pub-name
-			defaultIndentValue: '  '
 			template: path.join \_dev , \umd_template_1.3.ls
 			indent: '\t'
 		}
