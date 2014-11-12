@@ -3,7 +3,7 @@ require! {
 
 	gulp
 
-	\gulp-clean : clean
+	del
 	\gulp-task-listing : tasks
 	\gulp-rename : rename
 	\gulp-livescript : ls
@@ -55,10 +55,10 @@ build-list.forEach (item) !->
 
 	# build livescript to javascript (also minificated)
 
-	gulp.task \clean- + name , ->
-		gulp.src( path.join name , name + \.js ) .pipe clean!
-	gulp.task \clean- + name + \-min , ->
-		gulp.src( path.join name , name + \-min.js ) .pipe clean!
+	gulp.task \clean- + name , (cb) ->
+		del path.join( name , name + \.js ) , cb
+	gulp.task \clean- + name + \-min , (cb) ->
+		del path.join( name , name + \-min.js ) , cb
 
 	clean-tasks.push \clean- + name
 	clean-tasks.push \clean- + name + \-min
@@ -75,8 +75,8 @@ build-list.forEach (item) !->
 
 		# html docs
 
-		gulp.task \clean-docs-html- + name , ->
-			gulp.src( path.join name , \docs , \html ) .pipe clean!
+		gulp.task \clean-docs-html- + name , (cb) ->
+			del path.join( name , \docs , \html ) , cb
 		gulp.task \docs-html- + name , [ \clean-docs-html- + name , name ] , ->
 			jsdoc = require \gulp-jsdoc
 			dest = path.join name , \docs , \html
@@ -93,8 +93,8 @@ build-list.forEach (item) !->
 
 		# md docs
 
-		gulp.task \clean-docs-md- + name , ->
-			gulp.src( path.join name , \docs , \md ) .pipe clean!
+		gulp.task \clean-docs-md- + name , (cb) ->
+			del path.join( name , \docs , \md ) , cb
 		gulp.task \docs-md- + name , [ \clean-docs-md- + name , name ] ->
 			jsdoc2md = require \gulp-jsdoc-to-markdown
 			dest = path.join name , \docs , \md
