@@ -22,7 +22,7 @@
 
   var param_code = '';
   if (param.length > 0) {
-    param_code = '(' + param.join(', ') + ')';
+    param_code = '(' + param.join(', ') + ') ';
   }
 %>let
 <%= indent %>init = (root, factory) !->
