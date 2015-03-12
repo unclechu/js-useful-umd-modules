@@ -11,8 +11,8 @@
 /**
  * Provides class for getting value by key
  *
- * @module get_val
- * @version r11
+ * @module get-val
+ * @version 1.0.0
  * @author Viacheslav Lotsmanov
  * @license GNU/AGPLv3
  * @see {@link https://github.com/unclechu/js-useful-umd-modules/|GitHub}
@@ -35,26 +35,23 @@
  * @throws {GetVal~IncorrectArgument}
  * @throws {GetVal~RequiredArgumentKey}
  */
-var GetVal;
+var GetVal, toString$ = {}.toString;
 GetVal = (function(){
   GetVal.displayName = 'GetVal';
   var prototype = GetVal.prototype, constructor = GetVal;
   function GetVal(values, required){
-    var isArray, key, getWrapper;
+    var key, getWrapper;
     required == null && (required = null);
-    isArray = function(arg){
-      return Object.prototype.toString.call(arg) === '[object Array]';
-    };
     if (typeof values !== 'object') {
       throw new this.exceptions.IncorrectArgument(null, 'values', typeof values, 'object');
     }
     if (typeof values.values !== 'object') {
       throw new this.exceptions.RequiredArgumentKey(null, 'values', 'values', typeof values.values, 'object');
     }
-    if (isArray(values.values)) {
+    if (toString$.call(values.values).slice(8, -1) === 'Array') {
       throw new this.exceptions.RequiredArgumentKey(null, 'values', 'values', 'array', 'object');
     }
-    if (values.required && !isArray(values.required)) {
+    if (values.required && !toString$.call(values.required).slice(8, -1) === 'Array') {
       throw new this.exceptions.RequiredArgumentKey(null, 'values', 'required', typeof values.required, 'array');
     }
     if (required && typeof required !== 'object') {

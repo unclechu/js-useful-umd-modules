@@ -1,6 +1,6 @@
 require! {
 	should
-	\../get_val.js : GetVal
+	\../get-val.js : GetVal
 }
 
 <-! describe \GetVal

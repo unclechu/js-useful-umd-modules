@@ -23,7 +23,7 @@
   "buildList": [
     {
       "pubName": "GetVal",
-      "fileName": "get_val",
+      "fileName": "get-val",
       "docs": true,
       "test": true
     }

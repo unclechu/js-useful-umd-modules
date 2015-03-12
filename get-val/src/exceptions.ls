@@ -13,7 +13,7 @@
  * @static
  * @readOnly
  */
-@exceptions = @prototype.exceptions = {}
+@exceptions = @::.exceptions = {}
 
 @exceptions.IncorrectArgument = class extends Error
 	(message, arg-name, arg-type, must-be) !->

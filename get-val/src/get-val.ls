@@ -1,8 +1,8 @@
 /**
  * Provides class for getting value by key
  *
- * @module get_val
- * @version r11
+ * @module get-val
+ * @version 1.0.0
  * @author Viacheslav Lotsmanov
  * @license GNU/AGPLv3
  * @see {@link https://github.com/unclechu/js-useful-umd-modules/|GitHub}
@@ -33,27 +33,24 @@ class GetVal
 
 		# arguments validation
 
-		is-array = (arg) ->
-			Object.prototype.toString.call(arg) is '[object Array]'
-
 		# "values" arg
-		if typeof values is not \object
-			throw new @exceptions.IncorrectArgument null ,
-				\values , typeof values , \object
-		if typeof values.values is not \object
-			throw new @exceptions.RequiredArgumentKey null ,
-				\values , \values , typeof values.values , \object
-		if is-array values.values
-			throw new @exceptions.RequiredArgumentKey null ,
-				\values , \values , \array , \object
-		if values.required and not is-array values.required
-			throw new @exceptions.RequiredArgumentKey null,
-				\values , \required , typeof values.required , \array
+		if typeof values isnt \object
+			throw new @exceptions.IncorrectArgument null, \
+				\values, typeof values, \object
+		if typeof values.values isnt \object
+			throw new @exceptions.RequiredArgumentKey null, \
+				\values, \values, typeof values.values, \object
+		if typeof! values.values is \Array
+			throw new @exceptions.RequiredArgumentKey null, \
+				\values, \values, \array, \object
+		if values.required and not typeof! values.required is \Array
+			throw new @exceptions.RequiredArgumentKey null, \
+				\values, \required, typeof values.required, \array
 
 		# "required" arg
-		if required and typeof required is not \object
-			throw new @exceptions.IncorrectArgument null ,
-				\required , typeof required , \object
+		if required and typeof required isnt \object
+			throw new @exceptions.IncorrectArgument null, \
+				\required, typeof required, \object
 
 		/**
 		 * @private
@@ -71,14 +68,14 @@ class GetVal
 
 		if required
 			for key of required
-				@set.call @ , key , required[key]
+				@set.call @, key, required[key]
 
 		get-wrapper = let self = @
-			-> self.get.apply self , arguments
+			-> self.get.apply self, arguments
 
 		# additional wrapper for "set" method
 		get-wrapper.set = let self = @
-			-> self.set.apply self , arguments
+			-> self.set.apply self, arguments
 
 		/**
 		 * Link to class example for "get" method wrapper
@@ -101,8 +98,8 @@ class GetVal
 	 */
 	_check-required: !->
 		for item in @_required
-			if item not of @_values
-				throw new @exceptions.RequiredIsNotSet null , item
+			unless item of @_values
+				throw new @exceptions.RequiredIsNotSet null, item
 
 	/**
 	 * Set value by key
@@ -121,15 +118,15 @@ class GetVal
 	set: (key, val) !->
 		found = false
 
-		if typeof key is not \string
-			throw new @exceptions.IncorrectKey null , typeof key
+		unless typeof key is \string
+			throw new @exceptions.IncorrectKey null, typeof key
 
 		for item in @_required
 			if item is key
 				found = true
 
-		if not found
-			throw new @exceptions.NoKeyInRequiredList null , key
+		unless found
+			throw new @exceptions.NoKeyInRequiredList null, key
 
 		@_values[key] = val
 
@@ -149,13 +146,13 @@ class GetVal
 	 * @throws {GetVal~KeyIsNotExists}
 	 */
 	get: (key, ignore-required) ->
-		if not ignore-required then @_check-required!
+		@_check-required! unless ignore-required
 
-		if typeof key is not \string
-			throw new @exceptions.IncorrectKey null , typeof key
+		unless typeof key is \string
+			throw new @exceptions.IncorrectKey null, typeof key
 
-		if key not of @_values
-			throw new @exceptions.KeyIsNotExists null , key
+		unless key of @_values
+			throw new @exceptions.KeyIsNotExists null, key
 
 		return @_values[key]
 
