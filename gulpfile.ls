@@ -8,16 +8,16 @@ require! {
 	\gulp-rename : rename
 	\gulp-livescript : ls
 	\gulp-uglify : uglify
-	'./gulp-umd' : umd
 	\gulp-if : gulpif
 	\gulp-preprocess : preprocess
+	\gulp-wrapper : wrapper
 }
 
-pkg = require path.join process.cwd() , './package.json'
+pkg = require path.resolve process.cwd!, \./package.json
 
 gulp.task \help tasks
 
-build-list = pkg.buildList
+build-list = pkg.build-list
 
 default-tasks = []
 clean-tasks = []
@@ -33,133 +33,135 @@ docs-tasks = []
 
 test-tasks = []
 
-build-cb = (name, pub-name, mode=null) ->
-	gulp.src path.join name , \src , name + \.ls
+build-cb = (name, pub-name, {mode=null, deps-amd=[], deps-cjs=[], deps-global-vars=[], global-name=null, deps-vars=[]}) ->
+	throw new Error '"global-name" is required' unless global-name?
+	deps-amd = deps-amd |> (.map -> "'#{it}'") |> (* ', ')
+	deps-cjs = deps-cjs |> (.map -> "require('#{it}')") |> (* ', ')
+	deps-global-vars = deps-global-vars |> (* ', ')
+	deps-vars = deps-vars |> (* ', ')
+	gulp.src path.join name, \src, "#{name}.ls"
 		# preprocessor uses html comments by default, need js comments
-		.pipe rename name + \.js
+		.pipe rename "#{name}.js"
 		.pipe preprocess context: {}
-		.pipe rename name + \.ls # rename back to .ls extension
-		.pipe gulpif mode is not \ls , ls bare: true
-		.pipe gulpif mode is not \ls , umd {
-			namespace: (file) -> pub-name
-			defaultIndentValue: '  '
-		}
-		.pipe rename name + \.js
-		.pipe gulpif mode is \ugly , uglify preserveComments: 'some'
-		.pipe gulpif mode is \ugly , rename name + \-min.js
-		.pipe gulpif mode is \ls , umd {
-			namespace: (file) -> pub-name
-			template: path.join \_dev , \umd_template_1.3.ls
-			indent: '\t'
-		}
-		.pipe gulpif mode is \ls , rename name + \.ls
+		.pipe rename "#{name}.ls" # rename back to .ls extension
+		.pipe ls bare: true
+		.pipe rename "#{name}.js"
+		.pipe wrapper do
+			header: "
+				(function(root, factory) {\n
+				\  if (typeof define === 'function' && define.amd) {\n
+				\    define([#{deps-amd}], factory);\n
+				\  } else if (typeof exports === 'object') {\n
+				\    module.exports = factory(#{deps-cjs});\n
+				\  } else {\n
+				\    root.#{global-name} = factory(#{deps-global-vars});\n
+				\  }\n
+				}(this, function(#{deps-vars}) {\n\n
+			"
+			footer: "\n\n}));"
+		.pipe gulpif mode is \ugly, uglify preserve-comments: \some
+		.pipe gulpif mode is \ugly, rename "#{name}-min.js"
 		.pipe gulp.dest name
 
-build-list.forEach (item) !->
-	name = item.fileName
-	pub-name = item.pubName
+build-list.for-each (item) !->
+	{file-name: name, pub-name} = item
+	{deps-amd, deps-cjs, deps-global-vars, deps-vars} = item
+
+	build-opts =
+		global-name: pub-name
+		deps-amd: deps-amd
+		deps-cjs: deps-cjs
+		deps-global-vars: deps-global-vars
+		deps-vars: deps-vars
 
 	# build livescript to javascript (also minificated)
 
-	gulp.task \clean- + name , (cb) ->
-		del path.join( name , name + \.ls ) , cb
-	gulp.task \clean- + name + \-js , (cb) ->
-		del path.join( name , name + \.js ) , cb
-	gulp.task \clean- + name + \-js-min , (cb) ->
-		del path.join( name , name + \-min.js ) , cb
+	gulp.task "clean-#{name}", (cb) ->
+		del (path.join name, "#{name}.js"), cb
+	gulp.task "clean-#{name}-min", (cb) ->
+		del (path.join name, "#{name}-min.js"), cb
 
-	clean-tasks.push \clean- + name
-	clean-tasks.push \clean- + name + \-js
-	clean-tasks.push \clean- + name + \-js-min
+	["clean-#{name}", "clean-#{name}-min"].for-each !-> clean-tasks.push it
 
-	gulp.task name, [ \clean- + name ] , ->
-		build-cb name , pub-name , \ls
-	gulp.task name + \-js, [ \clean- + name + \-js ] , ->
-		build-cb name , pub-name
-	gulp.task name + \-js-min , [ \clean- + name + \-js-min ] , ->
-		build-cb name , pub-name , \ugly
+	gulp.task "#{name}", ["clean-#{name}"], ->
+		build-cb name, pub-name, build-opts
+	gulp.task "#{name}-min", ["clean-#{name}-min"], ->
+		build-cb name, pub-name, {} <<<< build-opts <<<< (mode: \ugly)
 
-	build-tasks.push name
-	build-tasks.push name + \-js
-	build-tasks.push name + \-js-min
+	["#{name}", "#{name}-min"].for-each !-> build-tasks.push it
 
 	if item.docs
 
 		# html docs
 
-		gulp.task \clean-docs-html- + name , (cb) ->
-			del path.join( name , \docs , \html ) , cb
-		gulp.task \docs-html- + name , [
-			\clean-docs-html- + name
-			name + \-js
-		] , ->
-			jsdoc = require \gulp-jsdoc
-			dest = path.join name , \docs , \html
+		gulp.task "clean-docs-html-#{name}", (cb) ->
+			del (path.join name, \docs, \html), cb
+		gulp.task "docs-html-#{name}", ["clean-docs-html-#{name}", "#{name}"], ->
+			require! \gulp-jsdoc : jsdoc
+			dest = path.join name, \docs, \html
 			options =
-				showPrivate : true
-				outputSourceFiles : false
-			template =
-				footer: ''
-			gulp.src path.join name , name + \.js
-				.pipe jsdoc dest , template , null , options
+				show-private: yes
+				output-source-files: no
+			template = footer: ''
+			gulp.src path.join name, "#{name}.js"
+				.pipe jsdoc dest, template, null, options
 
-		clean-jsdoc-tasks.push \clean-docs-html- + name
-		jsdoc-tasks.push \docs-html- + name
+		clean-jsdoc-tasks.push "clean-docs-html-#{name}"
+		jsdoc-tasks.push "docs-html-#{name}"
 
 		# md docs
 
-		gulp.task \clean-docs-md- + name , (cb) ->
-			del path.join( name , \docs , \md ) , cb
-		gulp.task \docs-md- + name , [
-			\clean-docs-md- + name
-			name + \-js
-		] , ->
-			jsdoc2md = require \gulp-jsdoc-to-markdown
-			dest = path.join name , \docs , \md
-			gulp.src path.join name , name + \.js
-				.pipe jsdoc2md \private : true
-				.pipe rename (path) !->
-					path.extname = \.md
+		gulp.task "clean-docs-md-#{name}", (cb) ->
+			del (path.join name, \docs, \md), cb
+		gulp.task "docs-md-#{name}", ["clean-docs-md-#{name}", "#{name}"], ->
+			require! \gulp-jsdoc-to-markdown : jsdoc2md
+			dest = path.join name, \docs, \md
+			gulp.src path.join name, "#{name}.js"
+				.pipe jsdoc2md private: true
+				.pipe rename (path) !-> path.extname = \.md
 				.pipe gulp.dest dest
 
-		clean-jsdoc2md-tasks.push \clean-docs-md- + name
-		jsdoc2md-tasks.push \docs-md- + name
+		clean-jsdoc2md-tasks.push "clean-docs-md-#{name}"
+		jsdoc2md-tasks.push "docs-md-#{name}"
 
 		# both docs
 
-		gulp.task \clean-docs- + name , [
-			\clean-docs-html- + name
-			\clean-docs-md- + name
+		gulp.task "clean-docs-#{name}", [
+			"clean-docs-html-#{name}"
+			"clean-docs-md-#{name}"
 		]
-		gulp.task \docs- + name , [
-			\clean-docs- + name
-			\docs-html- + name
-			\docs-md- + name
+		gulp.task "docs-#{name}", [
+			"clean-docs-#{name}"
+			"docs-html-#{name}"
+			"docs-md-#{name}"
 		]
 
-		clean-docs-tasks.push \clean-docs- + name
-		docs-tasks.push \docs- + name
+		clean-docs-tasks.push "clean-docs-#{name}"
+		docs-tasks.push "docs-#{name}"
 
 	if item.test
-		gulp.task \test- + name , [ name , name + \-js ] , ->
-			mocha = require \gulp-mocha
-			gulp.src path.join( name , \test , \test.ls ) , read : false
+		gulp.task "test-#{name}", [name], ->
+			require! \gulp-mocha : mocha
+			gulp.src (path.join name, \test, \test.ls), read: false
 				.pipe mocha!
-		test-tasks.push \test- + name
-
-gulp.task \clean clean-tasks
-gulp.task \build build-tasks
-
-# docs
-gulp.task \clean-docs-html clean-jsdoc-tasks
-gulp.task \docs-html jsdoc-tasks
-gulp.task \clean-docs-md clean-jsdoc2md-tasks
-gulp.task \docs-md jsdoc2md-tasks
-gulp.task \clean-docs clean-docs-tasks
-gulp.task \docs docs-tasks
-
-gulp.task \test test-tasks
+		test-tasks.push "test-#{name}"
 
 default-tasks.push \build
 
-gulp.task \default default-tasks
+tasks =
+	\clean : clean-tasks
+	\build : build-tasks
+
+	# docs
+	\clean-docs-html : clean-jsdoc-tasks
+	\docs-html : jsdoc-tasks
+	\clean-docs-md : clean-jsdoc2md-tasks
+	\docs-md : jsdoc2md-tasks
+	\clean-docs : clean-docs-tasks
+	\docs : docs-tasks
+
+	\test : test-tasks
+
+	\default : default-tasks
+
+for k,v of tasks then gulp.task k, v
