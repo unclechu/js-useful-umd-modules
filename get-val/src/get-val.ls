@@ -29,7 +29,7 @@
  * @throws {GetVal~RequiredArgumentKey}
  */
 class GetVal
-	(values , required=null) ->
+	(values, required=null) ->
 
 		# arguments validation
 

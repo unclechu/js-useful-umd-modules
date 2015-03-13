@@ -33,11 +33,18 @@ docs-tasks = []
 
 test-tasks = []
 
-build-cb = (name, pub-name, {mode=null, deps-amd=[], deps-cjs=[], deps-global-vars=[], global-name=null, deps-vars=[]}) ->
+build-cb = (name, pub-name, {
+	mode = null
+	deps-amd = []
+	deps-cjs = []
+	deps-global = []
+	global-name = null
+	deps-vars = []
+}) ->
 	throw new Error '"global-name" is required' unless global-name?
 	deps-amd = deps-amd |> (.map -> "'#{it}'") |> (* ', ')
 	deps-cjs = deps-cjs |> (.map -> "require('#{it}')") |> (* ', ')
-	deps-global-vars = deps-global-vars |> (* ', ')
+	deps-global = deps-global |> (.map -> "root.#it") |> (* ', ')
 	deps-vars = deps-vars |> (* ', ')
 	gulp.src path.join name, \src, "#{name}.ls"
 		# preprocessor uses html comments by default, need js comments
@@ -50,28 +57,30 @@ build-cb = (name, pub-name, {mode=null, deps-amd=[], deps-cjs=[], deps-global-va
 			header: "
 				(function(root, factory) {\n
 				\  if (typeof define === 'function' && define.amd) {\n
+				\    // AMD. Register as an anonymous module.\n
 				\    define([#{deps-amd}], factory);\n
 				\  } else if (typeof exports === 'object') {\n
+				\    // CommonJS\n
 				\    module.exports = factory(#{deps-cjs});\n
 				\  } else {\n
-				\    root.#{global-name} = factory(#{deps-global-vars});\n
+				\    // Browser globals\n
+				\    root.#{global-name} = factory(#{deps-global});\n
 				\  }\n
 				}(this, function(#{deps-vars}) {\n\n
 			"
 			footer: "\n\n}));"
 		.pipe gulpif mode is \ugly, uglify preserve-comments: \some
-		.pipe gulpif mode is \ugly, rename "#{name}-min.js"
+		.pipe gulpif mode is \ugly, rename "#{name}.min.js"
 		.pipe gulp.dest name
 
 build-list.for-each (item) !->
-	{file-name: name, pub-name} = item
-	{deps-amd, deps-cjs, deps-global-vars, deps-vars} = item
+	{file-name: name, pub-name, deps-AMD, deps-CJS, deps-global, deps-vars} = item
 
 	build-opts =
 		global-name: pub-name
-		deps-amd: deps-amd
-		deps-cjs: deps-cjs
-		deps-global-vars: deps-global-vars
+		deps-amd: deps-AMD
+		deps-cjs: deps-CJS
+		deps-global: deps-global
 		deps-vars: deps-vars
 
 	# build livescript to javascript (also minificated)
@@ -79,7 +88,7 @@ build-list.for-each (item) !->
 	gulp.task "clean-#{name}", (cb) ->
 		del (path.join name, "#{name}.js"), cb
 	gulp.task "clean-#{name}-min", (cb) ->
-		del (path.join name, "#{name}-min.js"), cb
+		del (path.join name, "#{name}.min.js"), cb
 
 	["clean-#{name}", "clean-#{name}-min"].for-each !-> clean-tasks.push it
 

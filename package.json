@@ -26,6 +26,16 @@
       "fileName": "get-val",
       "docs": true,
       "test": true
+    },
+    {
+      "pubName": "DynamicAPI",
+      "fileName": "dynamic-api",
+      "docs": true,
+      "test": false,
+      "depsAMD": ["jquery"],
+      "depsCJS": ["jquery"],
+      "depsGlobal": ["jQuery"],
+      "depsVars": ["$"]
     }
   ]
 }
